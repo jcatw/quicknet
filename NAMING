@@ -1,0 +1,9 @@
+naming convention:
+functionname_xyz
+x: preferential attachment type (linear, quadratic, ...)
+y: sort key type (node mass, subtree mass)
+z: priority type (uniform, linear stochastic)
+
+examples:
+xnu: any attachment type, nodemass sort key, uniform priority
+lsu: linear attachment, subtreemass sort key, uniform priority
