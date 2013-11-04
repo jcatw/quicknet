@@ -1,3 +1,4 @@
+#CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
 CFLAGS = -g
 DEFS = 
@@ -20,6 +21,9 @@ HDRS = bstreap.h krapivsky.h networknode.h
 #vpath %.hh src/c
 
 all: ${EXE}
+
+clean:
+	rm -f *.o a.out core ${EXE}
 
 depend:
 	${DEPEND} -s '# DO NOT DELETE: updated by make depend'		   \

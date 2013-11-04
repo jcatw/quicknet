@@ -30,14 +30,14 @@ make_node(uint64_t id, double lambda, double mu) {
   return n;
 }
 
-node_list_t *
-make_node_list() {
-  node_list_t *nl = (node_list_t*) malloc(sizeof(*nl));
-  if (!nl) return 0;
-  nl->node = NULL;
-  nl->next = NULL;
-  return nl;
-}
+//node_list_t *
+//make_node_list() {
+//  node_list_t *nl = (node_list_t*) malloc(sizeof(*nl));
+//  if (!nl) return 0;
+//  nl->node = NULL;
+//  nl->next = NULL;
+//  return nl;
+//}
 
 node_list_t *
 make_node_list(node_t *n) {

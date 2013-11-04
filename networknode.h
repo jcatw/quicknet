@@ -5,7 +5,7 @@ typedef struct node node_t;
 typedef struct node_list node_list_t;
 
 node_t *make_node(uint64_t id, double lambda, double mu);
-node_list_t *make_node_list();
+//node_list_t *make_node_list();
 node_list_t *make_node_list(node_t *n);
 void add_edge(node_t *n_from, node_t *n_to);
 
