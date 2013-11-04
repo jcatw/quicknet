@@ -3,20 +3,6 @@
 
 #include "networknode.h"
 
-struct node {
-  uint64_t id;
-  uint64_t in_degree;
-  uint64_t out_degree;
-  double lambda;
-  double mu;
-  node_list_t *adjacency_list;
-};
-
-struct node_list {
-  node_t *node;
-  node_list_t *next;
-};
-
 node_t *
 make_node(uint64_t id, double lambda, double mu) {
   node_t *n = (node_t*) malloc(sizeof(*n));
@@ -62,6 +48,14 @@ double get_in_degree(node_t *node) {
   return (double) node->in_degree;
 }
 
+double get_linear_in_degree(node_t *node) {
+  return (double) node->in_degree + node->lambda;
+}
+
 double get_out_degree(node_t *node) {
   return (double) node->out_degree;
+}
+
+double get_linear_out_degree(node_t *node) {
+  return (double) node->out_degree + node->mu;
 }

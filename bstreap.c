@@ -6,19 +6,7 @@
 #include "bstreap.h"
 
 
-struct bstreap {
-  double total_mass;
-  bstreap_item_t *root;
-};
 
-struct bstreap_item {
-  node_t *node;
-  bstreap_item_t *left;
-  bstreap_item_t *right;
-  double node_mass;
-  double subtree_mass;
-  uint64_t priority;
-};
 
 // general functions
 bstreap_t *
@@ -69,11 +57,11 @@ bstreap_insert(bstreap_t *bstreap,
 //bstreap_item_t *
 void
 bstreap_item_insert(bstreap_t *bstreap,
-                      bstreap_item_t *item,
-                      bstreap_item_t *existing_item,
-                      bstreap_item_t *parent,
-                      double (*compute_key)(bstreap_item_t*)) {
-existing_item->subtree_mass += item->node_mass;
+                    bstreap_item_t *item,
+                    bstreap_item_t *existing_item,
+                    bstreap_item_t *parent,
+                    double (*compute_key)(bstreap_item_t*)) {
+  existing_item->subtree_mass += item->node_mass;
 
   // if the sort key of the inserted node is smaller than the existing node...
   if ((*compute_key)(item) <= (*compute_key)(existing_item)) {
@@ -127,12 +115,16 @@ void bstreap_rotate_left(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item_
   full_subtree_mass = item->subtree_mass;
 
   y = item->right;
+  //item = y; //hmm
   y->subtree_mass = full_subtree_mass;
 
   item->right = y->left;  // assumes y is non-NULL
+  item->subtree_mass = full_subtree_mass;
   item->subtree_mass -= y->node_mass;
-  if(y->right != NULL)
-    item->subtree_mass -= y->right->node_mass;
+  if(y->right != NULL) {
+    //item->subtree_mass -= y->right->node_mass;
+    item->subtree_mass -= y->right->subtree_mass;
+  }
 
   y->left = item;
     
@@ -142,8 +134,10 @@ void bstreap_rotate_left(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item_
     parent->left = y;
   else if(parent->right == item)
     parent->right = y;
-  else
+  else {
+    fprintf(stderr,"Failed to rotate left.\n");
     return; //should not happen!
+  }
 }
 
 
@@ -154,14 +148,19 @@ void bstreap_rotate_right(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item
   full_subtree_mass = item->subtree_mass;
 
   y = item->left;
+  //item = y; //hmm
   y->subtree_mass = full_subtree_mass;
 
   item->left = y->right; // assumes y is non-NULL
+  item->subtree_mass = full_subtree_mass;
   item->subtree_mass -= y->node_mass;
-  if(y->left != NULL)
-    item->subtree_mass -= y->left->node_mass;
+  if(y->left != NULL) {
+    //item->subtree_mass -= y->left->node_mass;
+    item->subtree_mass -= y->left->subtree_mass;
+  }
 
-  y->left = item;
+  //y->left = item;
+  y->right = item;
 
   if(parent == NULL)
     bstreap->root = y;
@@ -169,8 +168,10 @@ void bstreap_rotate_right(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item
     parent->left = y;
   else if(parent->right == item)
     parent->right = y;
-  else
+  else {
+    fprintf(stderr,"Failed to rotate right.\n");
     return; //should not happen!
+  }
 }
 
 node_t *
@@ -227,41 +228,84 @@ bstreap_item_sample(bstreap_t *bstreap,
 // remove a node from a bstreap
 // do not free wrapper
 void bstreap_item_splice(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item_t *parent) {
+  bstreap_item_t *parent_placeholder;
   while(!(item->left == NULL && item->right == NULL)) {
     if(item->left == NULL) {
+      parent_placeholder = item->right;
       bstreap_rotate_left(bstreap, item, parent);
-      parent = item;
-      item = item->left;
+      parent = parent_placeholder;
+      //item = item->left;
     }
     else if (item->right == NULL) {
+      parent_placeholder = item->left;
       bstreap_rotate_right(bstreap, item, parent);
-      parent = item;
-      item = item->right;
+      parent = parent_placeholder;
+      //item = item->right;
     }
     else if (item->left->priority > item->right->priority) {
+      parent_placeholder = item->left;
       bstreap_rotate_right(bstreap, item, parent);
-      parent = item;
-      item = item->right;
+      parent = parent_placeholder;
+      //item = item->right;
     }
     else {
+      parent_placeholder = item->right;
       bstreap_rotate_left(bstreap, item, parent);
-      parent = item;
-      item = item->left;
+      parent = parent_placeholder;
+      //item = item->left;
     }
+    parent->subtree_mass -= item->node_mass;
   }
   if (bstreap->root == item)
     bstreap->root = NULL;
-  else if (parent->left == item)
+  else if (parent->left == item) {
     parent->left = NULL;
-  else if (parent->right == item)
+    //parent->subtree_mass -= item->node_mass;
+  }
+  else if (parent->right == item) {
     parent->right = NULL;
+    //parent->subtree_mass -= item->node_mass;
+  }
 }
+
+void
+print_bstreap(bstreap_t *bstreap) {
+  print_bstreap_item(bstreap->root, 0);
+}
+
+void
+print_bstreap_item(bstreap_item_t *item, int level) {
+  if(item == NULL) {
+    padding('\t', level);
+    puts("~");
+  }
+  else {
+    print_bstreap_item(item->right, level + 1);
+    padding('\t', level);
+    printf("%llu\n", item->node->id);
+    print_bstreap_item(item->left, level + 1);
+  }
+}
+
+void
+padding(char ch, int n) {
+  int i;
+
+  for(i=0; i<n; i++)
+    putchar(ch);
+}
+  
 
 // abstraction providers
 
 double
 get_node_mass (bstreap_item_t *item) {
   return item->node_mass;
+}
+
+double
+get_subtree_mass (bstreap_item_t *item) {
+  return item->subtree_mass;
 }
 
 uint64_t
@@ -273,23 +317,33 @@ random_priority () {
 
 bstreap_item_t *
 make_in_degree_bstreap_item_xnu(node_t *n) {
-  return make_bstreap_item(n, get_in_degree, random_priority);
+  return make_bstreap_item(n, get_linear_in_degree, random_priority);
 }
 
 bstreap_item_t *
 make_out_degree_bstreap_item_xnu(node_t *n) {
-  return make_bstreap_item(n, get_out_degree, random_priority);
+  return make_bstreap_item(n, get_linear_out_degree, random_priority);
 }
 
 void
 bstreap_in_degree_insert_lnu(bstreap_t *bstreap, node_t* node) {
-  bstreap_insert(bstreap, node, get_in_degree, random_priority, get_node_mass);
+  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_node_mass);
+}
+
+void
+bstreap_in_degree_insert_lsu(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_subtree_mass);
 }
 
 void
 bstreap_out_degree_insert_lnu(bstreap_t *bstreap, node_t* node) {
-  bstreap_insert(bstreap, node, get_out_degree, random_priority, get_node_mass);
+  bstreap_insert(bstreap, node, get_linear_out_degree, random_priority, get_node_mass);
 }
+
+void
+bstreap_out_degree_insert_lsu(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_out_degree, random_priority, get_subtree_mass);
+} 
 
 void bstreap_item_insert_xnz(bstreap_t *bstreap,
                              bstreap_item_t *item,
