@@ -19,15 +19,16 @@ struct krapivsky_model {
 };
 
 // general functions
-krapivsky_model_t *
-make_krapivsky_model(double p,
-                     double lambda,
-                     double mu,
-                     uint64_t target_n_nodes,
-                     void  (*set_maker)(krapivsky_model_t*),
-                     void  (*seed_maker)(krapivsky_model_t*));
+krapivsky_model_t *make_krapivsky_model(double p,
+                                        double lambda,
+                                        double mu,
+                                        uint64_t target_n_nodes,
+                                        void  (*set_maker)(krapivsky_model_t*),
+                                        void  (*seed_maker)(krapivsky_model_t*));
 void make_bstreap_item_seed_lnu(krapivsky_model_t *km);
+void make_bstreap_item_seed_lnn(krapivsky_model_t *km);
 void make_bstreap_item_seed_lsu(krapivsky_model_t *km);
+void make_bstreap_item_seed_lsn(krapivsky_model_t *km);
 int8_t krapivsky_done(krapivsky_model_t *km, uint64_t target_n_nodes);
 void krapivsky_next(krapivsky_model_t *km,
                     void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
@@ -51,18 +52,20 @@ void krapivsky_write_edges(krapivsky_model_t *km, char *filename);
 
 // abstraction providers
 void make_krapivsky_bstreaps(krapivsky_model_t *km);
-krapivsky_model_t *krapivsky_bstreap_simulate_lnu(double p,
-                                                  double lambda,
-                                                  double mu,
-                                                  uint64_t target_n_nodes);
 node_t *krapivsky_bstreap_in_degree_sampler(krapivsky_model_t *km);
 node_t *krapivsky_bstreap_out_degree_sampler(krapivsky_model_t *km);
 void krapivsky_bstreap_in_degree_indexer_lnu(krapivsky_model_t *km, node_t *node);
-void krapivsky_bstreap_in_degree_indexer_lsu(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_out_degree_indexer_lnu(krapivsky_model_t *km, node_t *node);
+void krapivsky_bstreap_in_degree_indexer_lnn(krapivsky_model_t *km, node_t *node);
+void krapivsky_bstreap_out_degree_indexer_lnn(krapivsky_model_t *km, node_t *node);
+void krapivsky_bstreap_in_degree_indexer_lsu(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_out_degree_indexer_lsu(krapivsky_model_t *km, node_t *node);
+void krapivsky_bstreap_in_degree_indexer_lsn(krapivsky_model_t *km, node_t *node);
+void krapivsky_bstreap_out_degree_indexer_lsn(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_node_adder_lnu(krapivsky_model_t *km, node_t *new_node);
+void krapivsky_bstreap_node_adder_lnn(krapivsky_model_t *km, node_t *new_node);
 void krapivsky_bstreap_node_adder_lsu(krapivsky_model_t *km, node_t *new_node);
+void krapivsky_bstreap_node_adder_lsn(krapivsky_model_t *km, node_t *new_node);
 
 
 // curried functions
@@ -73,7 +76,15 @@ krapivsky_model_t *krapivsky_bstreap_simulate_lnu(double p,
                                                   double lambda,
                                                   double mu,
                                                   uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_lnn(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
 krapivsky_model_t *krapivsky_bstreap_simulate_lsu(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_lsn(double p,
                                                   double lambda,
                                                   double mu,
                                                   uint64_t target_n_nodes);

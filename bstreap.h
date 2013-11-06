@@ -20,11 +20,11 @@ struct bstreap_item {
 
 // general functions
 bstreap_t *make_bstreap();
-bstreap_item_t *make_bstreap_item(node_t *n, double (*compute_mass) (node_t*), uint64_t (*compute_priority) (node_t*));
+bstreap_item_t *make_bstreap_item(node_t *n, double (*compute_mass) (node_t*), uint64_t (*compute_priority) (bstreap_item_t*));
 void bstreap_insert(bstreap_t *bstreap,
                     node_t* node,
                     double (*compute_mass) (node_t*),
-                    uint64_t (*compute_priority) (node_t*),
+                    uint64_t (*compute_priority) (bstreap_item_t*),
                     double (*compute_key)(bstreap_item_t*));
 void bstreap_item_insert(bstreap_t *bstreap,
                          bstreap_item_t *item,
@@ -48,14 +48,21 @@ void padding(char ch, int n);
 double get_node_mass(bstreap_item_t *item);
 double get_subtree_mass(bstreap_item_t *item);
 uint64_t random_priority ();
+uint64_t node_mass_priority(bstreap_item_t *item);
 
 // curried functions (delicious)
 bstreap_item_t *make_in_degree_bstreap_item_xnu(node_t *n);
 bstreap_item_t *make_out_degree_bstreap_item_xnu(node_t *n);
+bstreap_item_t *make_in_degree_bstreap_item_xnn(node_t *n);
+bstreap_item_t *make_out_degree_bstreap_item_xnn(node_t *n);
 void bstreap_in_degree_insert_lnu(bstreap_t *bstreap, node_t* node);
-void bstreap_in_degree_insert_lsu(bstreap_t *bstreap, node_t* node);
 void bstreap_out_degree_insert_lnu(bstreap_t *bstreap, node_t* node);
+void bstreap_in_degree_insert_lnn(bstreap_t *bstreap, node_t* node);
+void bstreap_out_degree_insert_lnn(bstreap_t *bstreap, node_t* node);
+void bstreap_in_degree_insert_lsu(bstreap_t *bstreap, node_t* node);
 void bstreap_out_degree_insert_lsu(bstreap_t *bstreap, node_t* node);
+void bstreap_in_degree_insert_lsn(bstreap_t *bstreap, node_t* node);
+void bstreap_out_degree_insert_lsn(bstreap_t *bstreap, node_t* node);
 void bstreap_item_insert_xnz(bstreap_t *bstreap,
                              bstreap_item_t *item,
                              bstreap_item_t *existing_item,

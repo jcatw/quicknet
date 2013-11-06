@@ -19,7 +19,7 @@ make_bstreap() {
 }
 
 bstreap_item_t *
-make_bstreap_item(node_t *n, double (*compute_mass) (node_t*), uint64_t (*compute_priority) (node_t*)) {
+make_bstreap_item(node_t *n, double (*compute_mass) (node_t*), uint64_t (*compute_priority) (bstreap_item_t*)) {
   bstreap_item_t *bi = (bstreap_item_t*) malloc(sizeof(*bi));
   if(!bi) return 0;
   bi->node = n;
@@ -27,7 +27,7 @@ make_bstreap_item(node_t *n, double (*compute_mass) (node_t*), uint64_t (*comput
   bi->right = NULL;
   bi->node_mass = (*compute_mass)(n);
   bi->subtree_mass = bi->node_mass;
-  bi->priority = (*compute_priority)(n);
+  bi->priority = (*compute_priority)(bi);
   return bi;
 }
 
@@ -36,7 +36,7 @@ void
 bstreap_insert(bstreap_t *bstreap,
                node_t* node,
                double (*compute_mass) (node_t*),
-               uint64_t (*compute_priority) (node_t*),
+               uint64_t (*compute_priority) (bstreap_item_t*),
                double (*compute_key)(bstreap_item_t*)) {
   bstreap_item_t *bstreap_item;
   //bstreap_item_t *parent;
@@ -313,6 +313,11 @@ random_priority () {
   return rand();
 }
 
+uint64_t
+node_mass_priority(bstreap_item_t *item) {
+  return (uint64_t) item->node_mass;
+}
+
 //curried functions
 
 bstreap_item_t *
@@ -325,14 +330,19 @@ make_out_degree_bstreap_item_xnu(node_t *n) {
   return make_bstreap_item(n, get_linear_out_degree, random_priority);
 }
 
-void
-bstreap_in_degree_insert_lnu(bstreap_t *bstreap, node_t* node) {
-  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_node_mass);
+bstreap_item_t *
+make_in_degree_bstreap_item_xnn(node_t *n) {
+  return make_bstreap_item(n, get_linear_in_degree, node_mass_priority);
+}
+
+bstreap_item_t *
+make_out_degree_bstreap_item_xnn(node_t *n) {
+  return make_bstreap_item(n, get_linear_out_degree, node_mass_priority);
 }
 
 void
-bstreap_in_degree_insert_lsu(bstreap_t *bstreap, node_t* node) {
-  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_subtree_mass);
+bstreap_in_degree_insert_lnu(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_node_mass);
 }
 
 void
@@ -341,8 +351,33 @@ bstreap_out_degree_insert_lnu(bstreap_t *bstreap, node_t* node) {
 }
 
 void
+bstreap_in_degree_insert_lnn(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_in_degree, node_mass_priority, get_node_mass);
+}
+
+void
+bstreap_out_degree_insert_lnn(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_out_degree, node_mass_priority, get_node_mass);
+}
+
+void
+bstreap_in_degree_insert_lsu(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_in_degree, random_priority, get_subtree_mass);
+}
+
+void
 bstreap_out_degree_insert_lsu(bstreap_t *bstreap, node_t* node) {
   bstreap_insert(bstreap, node, get_linear_out_degree, random_priority, get_subtree_mass);
+}
+
+void
+bstreap_in_degree_insert_lsn(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_in_degree, node_mass_priority, get_subtree_mass);
+}
+
+void
+bstreap_out_degree_insert_lsn(bstreap_t *bstreap, node_t* node) {
+  bstreap_insert(bstreap, node, get_linear_out_degree, node_mass_priority, get_subtree_mass);
 } 
 
 void bstreap_item_insert_xnz(bstreap_t *bstreap,
