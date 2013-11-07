@@ -221,7 +221,7 @@ bstreap_item_sample(bstreap_t *bstreap,
     item->subtree_mass -= sampled_item->node_mass;
     return sampled_item;
   }
-  fprintf(stderr,"Failed to sample a node.\n");
+  fprintf(stderr,"Failed to sample a bstreap node.\n");
   return NULL; //should not happen!
 }
 
