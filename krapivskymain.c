@@ -15,10 +15,12 @@
 
 int main(int argc, char **argv) {
   krapivsky_model_t *km;
-  double p, lambda, mu;
-  uint64_t target_n_nodes;
-  char out_file_name[BUFSIZE];
-  char type[BUFSIZE];
+  double p = 0.2;
+  double lambda = 3.5;
+  double mu = 1.8;
+  uint64_t target_n_nodes = 1000;
+  char out_file_name[BUFSIZE] = "results/edges.csv";
+  char type[BUFSIZE] = "heap";
   int c;
 
   //target_n_nodes = atoi(argv[1]);
