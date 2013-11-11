@@ -1,6 +1,6 @@
 #CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
-CFLAGS = ${CFLAGS} -g -ggdb
+CFLAGS = -g -ggdb
 DEFS = 
 
 DEPEND = makedepend
