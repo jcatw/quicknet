@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
   while((c = getopt(argc, argv, "t:p:m:l:n:")) != -1){
     switch(c) {
     case 't':
-      strcpy(out_file_name, optarg);
+      strcpy(type, optarg);
       break;
     case 'p':
       sscanf(optarg, "%lf", &p);
@@ -47,15 +47,15 @@ int main(int argc, char **argv) {
   
   sprintf(out_file_name,"results/%s/edges_%llu.csv",type,target_n_nodes);
 
-  if(strcmp(type,"lnu")) {
+  if(strcmp(type,"lnu") == 0) {
     km = krapivsky_bstreap_simulate_lnu(p, lambda, mu, target_n_nodes);
-  } else if(strcmp(type,"lnn")) {
+  } else if(strcmp(type,"lnn") == 0) {
     km = krapivsky_bstreap_simulate_lnn(p, lambda, mu, target_n_nodes);
-  } else if(strcmp(type,"lsu")) {
+  } else if(strcmp(type,"lsu") == 0) {
     km = krapivsky_bstreap_simulate_lsu(p, lambda, mu, target_n_nodes);
-  } else if(strcmp(type,"lsn")) {
+  } else if(strcmp(type,"lsn") == 0) {
     km = krapivsky_bstreap_simulate_lsn(p, lambda, mu, target_n_nodes);
-  } else if(strcmp(type,"heap")) {
+  } else if(strcmp(type,"heap") == 0) {
     km = krapivsky_heap_simulate(p, lambda, mu, target_n_nodes);
   } else {
     printf("Unknown type: %s\n",type);
