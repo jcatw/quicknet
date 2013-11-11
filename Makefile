@@ -10,11 +10,11 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = bstreap.c heap.c krapivsky.c krapivskymain.c networknode.c 
-OBJS = bstreap.o heap.o krapivsky.o krapivskymain.o networknode.o 
+SRCS = bstreap.c heap.c krapivsky.c krapivskymain.c networknode.c quickmath.c
+OBJS = bstreap.o heap.o krapivsky.o krapivskymain.o networknode.o quickmath.o
 EXE = quicknet
 
-HDRS = bstreap.h heap.h krapivsky.h networknode.h
+HDRS = bstreap.h heap.h krapivsky.h networknode.h quickmath.h
 
 #vpath %.o build/objects/c
 #vpath %.cc src/c
@@ -76,7 +76,8 @@ heap.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
 heap.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
 heap.o: /usr/include/machine/types.h /usr/include/i386/types.h
 heap.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
-heap.o: /usr/include/secure/_common.h heap.h
+heap.o: /usr/include/secure/_common.h /usr/include/stdint.h networknode.h
+heap.o: heap.h
 krapivsky.o: /usr/include/stdlib.h /usr/include/Availability.h
 krapivsky.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
 krapivsky.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
@@ -117,7 +118,10 @@ krapivskymain.o: /usr/include/i386/types.h /usr/include/stdint.h
 krapivskymain.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
 krapivskymain.o: /usr/include/secure/_common.h /usr/include/string.h
 krapivskymain.o: /usr/include/strings.h /usr/include/secure/_string.h
-krapivskymain.o: networknode.h bstreap.h heap.h krapivsky.h
+krapivskymain.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+krapivskymain.o: /usr/include/sys/select.h /usr/include/sys/_select.h
+krapivskymain.o: /usr/include/time.h /usr/include/_structs.h networknode.h
+krapivskymain.o: bstreap.h heap.h krapivsky.h quickmath.h
 networknode.o: /usr/include/stdlib.h /usr/include/Availability.h
 networknode.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
 networknode.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
@@ -134,3 +138,8 @@ networknode.o: /usr/include/libkern/_OSByteOrder.h
 networknode.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
 networknode.o: /usr/include/machine/types.h /usr/include/i386/types.h
 networknode.o: /usr/include/stdint.h networknode.h
+quickmath.o: /usr/include/stdint.h /usr/include/math.h
+quickmath.o: /usr/include/sys/cdefs.h /usr/include/sys/_symbol_aliasing.h
+quickmath.o: /usr/include/sys/_posix_availability.h
+quickmath.o: /usr/include/Availability.h /usr/include/AvailabilityInternal.h
+quickmath.o: quickmath.h

@@ -9,6 +9,7 @@
 #include "bstreap.h"
 #include "heap.h"
 #include "krapivsky.h"
+#include "quickmath.h"
 
 #define BUFSIZE 128
 
@@ -37,12 +38,15 @@ int main(int argc, char **argv) {
   // output filename for timing data
   char time_file_name[BUFSIZE];
   FILE *time_file;
+  // write out timing information?
+  int write_time = 0;
+  // array of execution times
+  double *times;
   // the type of data structure to use for node indexing
   char type[BUFSIZE] = "heap";
   // write out the network's edges?
   int write_edges = 0;
-  // write out timing information?
-  int write_time = 0;
+  
 
   // parse command line args
   while((c = getopt(argc, argv, "t:p:m:l:n:o:r:u:")) != -1){
@@ -77,9 +81,10 @@ int main(int argc, char **argv) {
   }
 
   // open the time file if we'll be using it
-  if(write_time)
+  if(write_time) {
+    times = (double*) malloc(n_runs * sizeof(*times));
     time_file = fopen(time_file_name,"w");
-  
+  }
   // run the simulations
   for(i=0;i<n_runs;i++) {
     t1 = clock();
@@ -103,15 +108,21 @@ int main(int argc, char **argv) {
       krapivsky_write_edges(km,run_file_name);
     }
     if(write_time) {
-      
-      fprintf(time_file, "%lf\n", ((double) (t2 - t1))/CLOCKS_PER_SEC);  // write time in seconds
+      times[i] = ((double) (t2 - t1))/CLOCKS_PER_SEC;  //time in seconds
+      fprintf(time_file, "%lf\n", times[i]);  
     }
     krapivsky_free(km);
   }
 
-  // close the time file if we used it
-  if(write_time)
+  // output and clean up timing data
+  if(write_time) {
+    printf("Simulated %llu networks with %llu nodes each.\nEach network took %lf +/- %lf seconds to simulate.\n",
+           n_runs,
+           target_n_nodes,
+           mean(times,n_runs),
+           stdev(times,n_runs));
+    free(times);
     fclose(time_file);
-  
+  }
   return 0;
 }
