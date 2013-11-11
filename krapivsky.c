@@ -14,10 +14,12 @@ make_krapivsky_model(double p,
                      double mu,
                      uint64_t target_n_nodes,
                      void  (*set_maker)(krapivsky_model_t*),
-                     void  (*seed_maker)(krapivsky_model_t*)) {
+                     void  (*seed_maker)(krapivsky_model_t*),
+                     uint8_t index_type) {
   krapivsky_model_t *km = (krapivsky_model_t*) malloc(sizeof(*km));
   if (!km) return 0;
   (*set_maker)(km);
+  km->index_type = index_type;
   km->p = p;
   km->lambda = lambda;
   km->mu = mu;
@@ -208,6 +210,7 @@ krapivsky_simulate(double p,
                    uint64_t target_n_nodes,
                    void  (*set_maker)(krapivsky_model_t*),
                    void  (*seed_maker)(krapivsky_model_t*),
+                   uint8_t index_type,
                    void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
                    node_t* (*in_degree_sampler) (krapivsky_model_t *km),
                    node_t* (*out_degree_sampler) (krapivsky_model_t *km),
@@ -215,7 +218,7 @@ krapivsky_simulate(double p,
                    void (*new_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node),
                    void (*existing_node_in_degree_indexer) (krapivsky_model_t *km, node_t *node),
                    void (*existing_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node)) {
-  krapivsky_model_t *km = make_krapivsky_model(p, lambda, mu, target_n_nodes, set_maker, seed_maker);
+  krapivsky_model_t *km = make_krapivsky_model(p, lambda, mu, target_n_nodes, set_maker, seed_maker, index_type);
   while(!krapivsky_done(km, target_n_nodes))
     krapivsky_next(km,
                    node_adder,
@@ -245,6 +248,30 @@ void krapivsky_write_edges(krapivsky_model_t *km, char *filename) {
     }
   }
   fclose(edge_file);
+}
+
+void
+krapivsky_free(krapivsky_model_t *km) {
+  uint64_t i;
+
+  // free indexes
+  // this is fragile; detect type union by looking at size of
+  // structure pointed to
+  if(km->index_type == 0) {
+    bstreap_free(km->in_degree_set.bstreap);
+    bstreap_free(km->out_degree_set.bstreap);
+  } else {
+    heap_free(km->in_degree_set.heap);
+    heap_free(km->out_degree_set.heap);
+  }
+
+  // free nodes
+  for (i = 0; i<km->n_nodes; i++)
+    node_free(km->nodes[i]);
+  free(km->nodes);
+
+  // free model
+  free(km);
 }
 
 // abstraction providers
@@ -387,6 +414,7 @@ krapivsky_bstreap_simulate_lnu(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lnu,
+                            0,
                             krapivsky_bstreap_node_adder_lnu,
                             krapivsky_bstreap_in_degree_sampler,
                             krapivsky_bstreap_out_degree_sampler,
@@ -407,6 +435,7 @@ krapivsky_bstreap_simulate_lnn(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lnn,
+                            0,
                             krapivsky_bstreap_node_adder_lnn,
                             krapivsky_bstreap_in_degree_sampler,
                             krapivsky_bstreap_out_degree_sampler,
@@ -427,6 +456,7 @@ krapivsky_bstreap_simulate_lsu(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lsu,
+                            0,
                             krapivsky_bstreap_node_adder_lsu,
                             krapivsky_bstreap_in_degree_sampler,
                             krapivsky_bstreap_out_degree_sampler,
@@ -447,6 +477,7 @@ krapivsky_bstreap_simulate_lsn(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lsn,
+                            0,
                             krapivsky_bstreap_node_adder_lsn,
                             krapivsky_bstreap_in_degree_sampler,
                             krapivsky_bstreap_out_degree_sampler,
@@ -466,6 +497,7 @@ krapivsky_model_t *krapivsky_heap_simulate(double p,
                             target_n_nodes,
                             make_krapivsky_heaps,
                             make_heap_item_seed,
+                            1,
                             krapivsky_heap_node_adder,
                             krapivsky_heap_in_degree_sampler,
                             krapivsky_heap_out_degree_sampler,

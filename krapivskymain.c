@@ -55,14 +55,12 @@ int main(int argc, char **argv) {
     km = krapivsky_bstreap_simulate_lsn(p, lambda, mu, target_n_nodes);
   } else if(strcmp(type,"heap")) {
     km = krapivsky_heap_simulate(p, lambda, mu, target_n_nodes);
+  } else {
+    printf("Unknown type: %s\n",type);
+    return 1;
   }
   
   krapivsky_write_edges(km,out_file_name);
-  
-  //km = krapivsky_bstreap_simulate_lnu(0.2, 3.5, 1.8, target_n_nodes);
-  //km = krapivsky_bstreap_simulate_lnn(0.2, 3.5, 1.8, target_n_nodes);
-  //km = krapivsky_bstreap_simulate_lsu(0.2, 3.5, 1.8, target_n_nodes);
-  //km = krapivsky_bstreap_simulate_lsn(0.2, 3.5, 1.8, target_n_nodes);
-  //km = krapivsky_heap_simulate(0.2, 3.5, 1.8, target_n_nodes);
+  krapivsky_free(km);
   return 0;
 }

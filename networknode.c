@@ -59,3 +59,15 @@ double get_out_degree(node_t *node) {
 double get_linear_out_degree(node_t *node) {
   return (double) node->out_degree + node->mu;
 }
+
+void node_free(node_t *node) {
+  if(node->adjacency_list != NULL)
+    node_list_free(node->adjacency_list);
+  free(node);
+}
+
+void node_list_free(node_list_t *node_list) {
+  if(node_list->next != NULL)
+    node_list_free(node_list->next);
+  free(node_list);
+}

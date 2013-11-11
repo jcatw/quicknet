@@ -43,6 +43,8 @@ void bstreap_item_splice(bstreap_t *bstreap, bstreap_item_t *item, bstreap_item_
 void print_bstreap(bstreap_t *bstreap);
 void print_bstreap_item(bstreap_item_t *item, int level);
 void padding(char ch, int n);
+void bstreap_free(bstreap_t *bstreap);
+void bstreap_item_free(bstreap_item_t *item);
 
 // abstraction providers
 double get_node_mass(bstreap_item_t *item);

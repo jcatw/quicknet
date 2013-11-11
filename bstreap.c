@@ -5,9 +5,6 @@
 #include "networknode.h"
 #include "bstreap.h"
 
-
-
-
 // general functions
 bstreap_t *
 make_bstreap() {
@@ -295,6 +292,22 @@ padding(char ch, int n) {
     putchar(ch);
 }
   
+void
+bstreap_free(bstreap_t *bstreap) {
+  if (bstreap->root != NULL)
+    bstreap_item_free(bstreap->root);
+  free(bstreap);
+}
+
+void
+bstreap_item_free(bstreap_item_t *item) {
+  if(item->left != NULL)
+    bstreap_item_free(item->left);
+  if(item->right != NULL)
+    bstreap_item_free(item->right);
+
+  free(item);
+}
 
 // abstraction providers
 

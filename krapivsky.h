@@ -10,6 +10,10 @@ union degree_set {
 };
 
 struct krapivsky_model {
+  // index_type:
+  //  0: bstreap
+  //  1: heap
+  uint8_t index_type;
   degree_set_t in_degree_set;
   degree_set_t out_degree_set;
   uint64_t n_nodes;
@@ -25,7 +29,8 @@ krapivsky_model_t *make_krapivsky_model(double p,
                                         double mu,
                                         uint64_t target_n_nodes,
                                         void  (*set_maker)(krapivsky_model_t*),
-                                        void  (*seed_maker)(krapivsky_model_t*));
+                                        void  (*seed_maker)(krapivsky_model_t*),
+                                        uint8_t index_type);
 void make_bstreap_item_seed_lnu(krapivsky_model_t *km);
 void make_bstreap_item_seed_lnn(krapivsky_model_t *km);
 void make_bstreap_item_seed_lsu(krapivsky_model_t *km);
@@ -46,6 +51,7 @@ krapivsky_model_t* krapivsky_simulate(double p,
                                       uint64_t target_n_nodes,
                                       void  (*set_maker)(krapivsky_model_t*),
                                       void  (*seed_maker)(krapivsky_model_t*),
+                                      uint8_t index_type,
                                       void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
                                       node_t* (*in_degree_sampler) (krapivsky_model_t *km),
                                       node_t* (*out_degree_sampler) (krapivsky_model_t *km),
@@ -55,6 +61,7 @@ krapivsky_model_t* krapivsky_simulate(double p,
                                       void (*existing_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node));
 
 void krapivsky_write_edges(krapivsky_model_t *km, char *filename);
+void krapivsky_free(krapivsky_model_t *km);
 
 // abstraction providers
 void make_krapivsky_bstreaps(krapivsky_model_t *km);

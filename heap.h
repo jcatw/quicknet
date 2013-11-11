@@ -47,6 +47,6 @@ double heap_item_get_node_mass(heap_item_t *item);
 void heap_item_set_node_mass(heap_item_t *item, double node_mass);
 double heap_item_get_priority(heap_item_t *item);
 void heap_item_set_priority(heap_item_t *item, double priority);
-void heap_in_degree_insert(heap_t *heap, node_t* node);
-void heap_out_degree_insert(heap_t *heap, node_t* node);
+
+void heap_free(heap_t *heap);
 #endif /* QUICKNET_HEAP_H */

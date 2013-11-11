@@ -29,4 +29,7 @@ double get_in_degree(node_t *node);
 double get_linear_in_degree(node_t *node);
 double get_out_degree(node_t *node);
 double get_linear_out_degree(node_t *node);
+
+void node_free(node_t *node);
+void node_list_free(node_list_t *node_list);
 #endif /* QUICKNET_NETWORKNODE_H */

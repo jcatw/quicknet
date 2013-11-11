@@ -233,6 +233,16 @@ heap_item_set_node_mass(heap_item_t *item, double node_mass) {
   item->node_mass = node_mass;
 }
 
+void
+heap_free(heap_t *heap) {
+  uint64_t i;
+  for(i = 0; i<heap->n_nodes; i++) {
+    free(heap->items[i]);
+  }
+  free(heap->items);
+  free(heap);
+}
+
 //double
 //heap_item_get_priority(heap_item_t *item) {
 //  return item->priority;
