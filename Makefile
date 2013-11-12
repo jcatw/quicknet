@@ -5,7 +5,7 @@ LDFLAGS = -lm
 DEFS = 
 
 DEPEND = makedepend
-DEPEND_FLAGS = -Y
+DEPEND_FLAGS = -Y   # suppresses shared includes
 DEPEND_DEFINES = 
 
 srcdir = 
