@@ -1,6 +1,7 @@
 #CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
 CFLAGS = -g -ggdb -lm
+LDFLAGS = -lm
 DEFS = 
 
 DEPEND = makedepend
