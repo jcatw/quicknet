@@ -5,13 +5,16 @@
 #include <unistd.h>
 #include <time.h>
 
+
 #include "networknode.h"
 #include "bstreap.h"
 #include "heap.h"
 #include "krapivsky.h"
+// quickmath also defines bufsize, so get to it first
+#ifndef BUFSIZE
+#define BUFSIZE 1024
+#endif
 #include "quickmath.h"
-
-#define BUFSIZE 128
 
 int main(int argc, char **argv) {
   // counter
@@ -23,34 +26,49 @@ int main(int argc, char **argv) {
 
   // model data structure
   krapivsky_model_t *km;
+  
   // model parameters
   double p = 0.2;
   double lambda = 3.5;
   double mu = 1.8;
+  
   // number of nodes to simulate
   uint64_t target_n_nodes = 1000;
+  
   // number of simulations to run
   uint64_t n_runs = 1;
-  // base output filename
-  char out_file_name[BUFSIZE] = "results/edges.csv";
+
+  // base output dir
+  char base_dir_name[BUFSIZE] = ".";
+  
+  // edge output filename
+  char edge_file_name[BUFSIZE] = "edges.csv";
+  char edge_file_fullname[BUFSIZE];
+  // write out the network's edges?
+  int write_edges = 0;
+  
   // output filename for each run, constructed automatically
-  char run_file_name[BUFSIZE];
+  char run_file_fullname[BUFSIZE];
   // output filename for timing data
-  char time_file_name[BUFSIZE];
+  char time_file_name[BUFSIZE] = "times.csv";
+  char time_file_fullname[BUFSIZE];
   FILE *time_file;
+  
   // write out timing information?
   int write_time = 0;
   // array of execution times
   double *times;
+  
   // the type of data structure to use for node indexing
   char type[BUFSIZE] = "heap";
-  // write out the network's edges?
-  int write_edges = 0;
   
-
   // parse command line args
-  while((c = getopt(argc, argv, "t:p:m:l:n:o:r:u:")) != -1){
+  while((c = getopt(argc, argv, "e:t:p:m:l:n:o:r:u:")) != -1){
     switch(c) {
+    case 'e':
+      strcpy(edge_file_name, optarg);
+      write_edges = 1;
+      break;
     case 't':
       strcpy(type, optarg);
       break;
@@ -67,8 +85,7 @@ int main(int argc, char **argv) {
       sscanf(optarg, "%llu", &target_n_nodes);
       break;
     case 'o':
-      write_edges = 1;
-      strcpy(out_file_name,optarg);
+      strcpy(base_dir_name,optarg);
       break;
     case 'r':
       sscanf(optarg, "%llu", &n_runs);
@@ -80,10 +97,17 @@ int main(int argc, char **argv) {
     }
   }
 
+  // prepend basedir to filenames
+  sprintf(edge_file_fullname, "%s/%s", base_dir_name, edge_file_name);
+  sprintf(time_file_fullname, "%s/%s", base_dir_name, time_file_name);
+
+  // initialize pseudorandom number generator
+  rand_init(base_dir_name, "randomseed.csv");
+
   // open the time file if we'll be using it
   if(write_time) {
     times = (double*) malloc(n_runs * sizeof(*times));
-    time_file = fopen(time_file_name,"w");
+    time_file = fopen(time_file_fullname,"w");
   }
   // run the simulations
   for(i=0;i<n_runs;i++) {
@@ -104,8 +128,11 @@ int main(int argc, char **argv) {
     }
     t2 = clock();
     if(write_edges) {
-      sprintf(run_file_name,"%s_%llu",out_file_name,i);
-      krapivsky_write_edges(km,run_file_name);
+      sprintf(run_file_fullname,
+              "%s_%llu",
+              edge_file_fullname,
+              i);
+      krapivsky_write_edges(km,run_file_fullname);
     }
     if(write_time) {
       times[i] = ((double) (t2 - t1))/CLOCKS_PER_SEC;  //time in seconds
