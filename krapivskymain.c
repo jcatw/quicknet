@@ -53,6 +53,9 @@ int main(int argc, char **argv) {
   char time_file_name[BUFSIZE] = "times.csv";
   char time_file_fullname[BUFSIZE];
   FILE *time_file;
+
+  // random seed filename
+  char random_seed_file_name[BUFSIZE] = "randomseed.csv";
   
   // write out timing information?
   int write_time = 0;
@@ -63,8 +66,11 @@ int main(int argc, char **argv) {
   char type[BUFSIZE] = "heap";
   
   // parse command line args
-  while((c = getopt(argc, argv, "e:t:p:m:l:n:o:r:u:")) != -1){
+  while((c = getopt(argc, argv, "s:e:t:p:m:l:n:o:r:u:")) != -1){
     switch(c) {
+    case 's':
+      strcpy(random_seed_file_name, optarg);
+      break;
     case 'e':
       strcpy(edge_file_name, optarg);
       write_edges = 1;
@@ -102,13 +108,14 @@ int main(int argc, char **argv) {
   sprintf(time_file_fullname, "%s/%s", base_dir_name, time_file_name);
 
   // initialize pseudorandom number generator
-  rand_init(base_dir_name, "randomseed.csv");
+  rand_init(base_dir_name, random_seed_file_name);
 
   // open the time file if we'll be using it
   if(write_time) {
     times = (double*) malloc(n_runs * sizeof(*times));
     time_file = fopen(time_file_fullname,"w");
   }
+  
   // run the simulations
   for(i=0;i<n_runs;i++) {
     t1 = clock();

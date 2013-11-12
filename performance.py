@@ -50,8 +50,9 @@ if simulate:
             #output_path = "%s/%s/%s/%s.csv" % (output_dir,simtype,n_runs,size)
             output_path = "%s/%s/%s/" % (output_dir,simtype,n_runs)
             timefile = "time_%s.csv" % (size,)
+            randfile = "randomseed_%s.csv" % (size,)
             ensure_dir(output_path)
-            os.system("./quicknet -o %s -r %d -n %d -t %s -u %s" % (output_path, n_runs, size, simtype, timefile))
+            os.system("./quicknet -o %s -r %d -n %d -t %s -u %s -s %s" % (output_path, n_runs, size, simtype, timefile, randfile))
 
 for simtype in simtypes:
     for size in sizes[simtype]:
