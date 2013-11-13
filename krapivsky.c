@@ -7,6 +7,7 @@
 #include "heap.h"
 #include "bstreap.h"
 #include "krapivsky.h"
+#include "quickmath.h"
 
 krapivsky_model_t *
 make_krapivsky_model(double p,
@@ -15,14 +16,15 @@ make_krapivsky_model(double p,
                      uint64_t target_n_nodes,
                      void  (*set_maker)(krapivsky_model_t*),
                      void  (*seed_maker)(krapivsky_model_t*),
+                     double (*fitness_function)(double fitness),
                      uint8_t index_type) {
   krapivsky_model_t *km = (krapivsky_model_t*) malloc(sizeof(*km));
   if (!km) return 0;
   (*set_maker)(km);
   km->index_type = index_type;
   km->p = p;
-  km->lambda = lambda;
-  km->mu = mu;
+  km->lambda = (*fitness_function)(lambda);
+  km->mu = (*fitness_function)(mu);
   km->nodes = (node_t**) malloc(target_n_nodes * sizeof(node_t**));
   (*seed_maker)(km);  
   return km;
@@ -210,6 +212,7 @@ krapivsky_simulate(double p,
                    uint64_t target_n_nodes,
                    void  (*set_maker)(krapivsky_model_t*),
                    void  (*seed_maker)(krapivsky_model_t*),
+                   double (*fitness_function)(double fitness),
                    uint8_t index_type,
                    void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
                    node_t* (*in_degree_sampler) (krapivsky_model_t *km),
@@ -218,7 +221,14 @@ krapivsky_simulate(double p,
                    void (*new_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node),
                    void (*existing_node_in_degree_indexer) (krapivsky_model_t *km, node_t *node),
                    void (*existing_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node)) {
-  krapivsky_model_t *km = make_krapivsky_model(p, lambda, mu, target_n_nodes, set_maker, seed_maker, index_type);
+  krapivsky_model_t *km = make_krapivsky_model(p,
+                                               lambda,
+                                               mu,
+                                               target_n_nodes,
+                                               set_maker,
+                                               seed_maker,
+                                               fitness_function,
+                                               index_type);
   while(!krapivsky_done(km, target_n_nodes))
     krapivsky_next(km,
                    node_adder,
@@ -414,6 +424,7 @@ krapivsky_bstreap_simulate_lnu(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lnu,
+                            identity,
                             0,
                             krapivsky_bstreap_node_adder_lnu,
                             krapivsky_bstreap_in_degree_sampler,
@@ -435,6 +446,7 @@ krapivsky_bstreap_simulate_lnn(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lnn,
+                            identity,
                             0,
                             krapivsky_bstreap_node_adder_lnn,
                             krapivsky_bstreap_in_degree_sampler,
@@ -456,6 +468,7 @@ krapivsky_bstreap_simulate_lsu(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lsu,
+                            identity,
                             0,
                             krapivsky_bstreap_node_adder_lsu,
                             krapivsky_bstreap_in_degree_sampler,
@@ -477,6 +490,7 @@ krapivsky_bstreap_simulate_lsn(double p,
                             target_n_nodes,
                             make_krapivsky_bstreaps,
                             make_bstreap_item_seed_lsn,
+                            identity,
                             0,
                             krapivsky_bstreap_node_adder_lsn,
                             krapivsky_bstreap_in_degree_sampler,
@@ -497,6 +511,116 @@ krapivsky_model_t *krapivsky_heap_simulate(double p,
                             target_n_nodes,
                             make_krapivsky_heaps,
                             make_heap_item_seed,
+                            identity,
+                            1,
+                            krapivsky_heap_node_adder,
+                            krapivsky_heap_in_degree_sampler,
+                            krapivsky_heap_out_degree_sampler,
+                            krapivsky_heap_in_degree_indexer,
+                            krapivsky_heap_out_degree_indexer,
+                            krapivsky_null_indexer,
+                            krapivsky_null_indexer);
+}
+
+krapivsky_model_t *
+krapivsky_bstreap_simulate_pareto_lnu(double p,
+                                      double lambda,
+                                      double mu,
+                                      uint64_t target_n_nodes) {
+  return krapivsky_simulate(p,
+                            lambda,
+                            mu,
+                            target_n_nodes,
+                            make_krapivsky_bstreaps,
+                            make_bstreap_item_seed_lnu,
+                            sample_fitness_pareto,
+                            0,
+                            krapivsky_bstreap_node_adder_lnu,
+                            krapivsky_bstreap_in_degree_sampler,
+                            krapivsky_bstreap_out_degree_sampler,
+                            krapivsky_bstreap_in_degree_indexer_lnu,
+                            krapivsky_bstreap_out_degree_indexer_lnu,
+                            krapivsky_bstreap_in_degree_indexer_lnu,
+                            krapivsky_bstreap_out_degree_indexer_lnu);
+}
+
+krapivsky_model_t *
+krapivsky_bstreap_simulate_pareto_lnn(double p,
+                               double lambda,
+                               double mu,
+                               uint64_t target_n_nodes) {
+  return krapivsky_simulate(p,
+                            lambda,
+                            mu,
+                            target_n_nodes,
+                            make_krapivsky_bstreaps,
+                            make_bstreap_item_seed_lnn,
+                            sample_fitness_pareto,
+                            0,
+                            krapivsky_bstreap_node_adder_lnn,
+                            krapivsky_bstreap_in_degree_sampler,
+                            krapivsky_bstreap_out_degree_sampler,
+                            krapivsky_bstreap_in_degree_indexer_lnn,
+                            krapivsky_bstreap_out_degree_indexer_lnn,
+                            krapivsky_bstreap_in_degree_indexer_lnn,
+                            krapivsky_bstreap_out_degree_indexer_lnn);
+}
+
+krapivsky_model_t *
+krapivsky_bstreap_simulate_pareto_lsu(double p,
+                               double lambda,
+                               double mu,
+                               uint64_t target_n_nodes) {
+  return krapivsky_simulate(p,
+                            lambda,
+                            mu,
+                            target_n_nodes,
+                            make_krapivsky_bstreaps,
+                            make_bstreap_item_seed_lsu,
+                            sample_fitness_pareto,
+                            0,
+                            krapivsky_bstreap_node_adder_lsu,
+                            krapivsky_bstreap_in_degree_sampler,
+                            krapivsky_bstreap_out_degree_sampler,
+                            krapivsky_bstreap_in_degree_indexer_lsu,
+                            krapivsky_bstreap_out_degree_indexer_lsu,
+                            krapivsky_bstreap_in_degree_indexer_lsu,
+                            krapivsky_bstreap_out_degree_indexer_lsu);
+}
+
+krapivsky_model_t *
+krapivsky_bstreap_simulate_pareto_lsn(double p,
+                               double lambda,
+                               double mu,
+                               uint64_t target_n_nodes) {
+  return krapivsky_simulate(p,
+                            lambda,
+                            mu,
+                            target_n_nodes,
+                            make_krapivsky_bstreaps,
+                            make_bstreap_item_seed_lsn,
+                            sample_fitness_pareto,
+                            0,
+                            krapivsky_bstreap_node_adder_lsn,
+                            krapivsky_bstreap_in_degree_sampler,
+                            krapivsky_bstreap_out_degree_sampler,
+                            krapivsky_bstreap_in_degree_indexer_lsn,
+                            krapivsky_bstreap_out_degree_indexer_lsn,
+                            krapivsky_bstreap_in_degree_indexer_lsn,
+                            krapivsky_bstreap_out_degree_indexer_lsn);
+}
+
+krapivsky_model_t *krapivsky_heap_simulate_pareto(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes) {
+  return krapivsky_simulate(p,
+                            lambda,
+                            mu,
+                            target_n_nodes,
+                            make_krapivsky_heaps,
+                            make_heap_item_seed,
+                            sample_fitness_pareto,
                             1,
                             krapivsky_heap_node_adder,
                             krapivsky_heap_in_degree_sampler,

@@ -30,6 +30,7 @@ krapivsky_model_t *make_krapivsky_model(double p,
                                         uint64_t target_n_nodes,
                                         void  (*set_maker)(krapivsky_model_t*),
                                         void  (*seed_maker)(krapivsky_model_t*),
+                                        double (*fitness_function)(double fitness),
                                         uint8_t index_type);
 void make_bstreap_item_seed_lnu(krapivsky_model_t *km);
 void make_bstreap_item_seed_lnn(krapivsky_model_t *km);
@@ -51,6 +52,7 @@ krapivsky_model_t* krapivsky_simulate(double p,
                                       uint64_t target_n_nodes,
                                       void  (*set_maker)(krapivsky_model_t*),
                                       void  (*seed_maker)(krapivsky_model_t*),
+                                      double (*fitness_function)(double fitness),
                                       uint8_t index_type,
                                       void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
                                       node_t* (*in_degree_sampler) (krapivsky_model_t *km),
@@ -109,6 +111,26 @@ krapivsky_model_t *krapivsky_bstreap_simulate_lsn(double p,
                                                   double mu,
                                                   uint64_t target_n_nodes);
 krapivsky_model_t *krapivsky_heap_simulate(double p,
+                                           double lambda,
+                                           double mu,
+                                           uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lnu(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lnn(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsu(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsn(double p,
+                                                  double lambda,
+                                                  double mu,
+                                                  uint64_t target_n_nodes);
+krapivsky_model_t *krapivsky_heap_simulate_pareto(double p,
                                            double lambda,
                                            double mu,
                                            uint64_t target_n_nodes);

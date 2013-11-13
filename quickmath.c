@@ -61,3 +61,13 @@ rand_init(char *base_dir, char *seed_name) {
   
   return random_seed;
 }
+
+double
+sample_fitness_pareto(double alpha) {
+  return (1. / alpha) / pow((((double) rand()) / RAND_MAX),1./alpha);
+}
+
+double
+identity(double x) {
+  return x;
+}
