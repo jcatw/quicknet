@@ -24,6 +24,8 @@ int main(int argc, char **argv) {
   // timing variables
   clock_t t1, t2;
 
+  // simulation input
+  krapivsky_input_t *input;
   // model data structure
   krapivsky_model_t *km;
   
@@ -115,30 +117,33 @@ int main(int argc, char **argv) {
     times = (double*) malloc(n_runs * sizeof(*times));
     time_file = fopen(time_file_fullname,"w");
   }
+
+  // construct the simulation input
+  input = krapivsky_make_input(p, lambda, mu, target_n_nodes);
   
   // run the simulations
   for(i=0;i<n_runs;i++) {
     t1 = clock();
     if(strcmp(type,"lnu") == 0) {
-      km = krapivsky_bstreap_simulate_lnu(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_lnu(input);
     } else if(strcmp(type,"lnn") == 0) {
-      km = krapivsky_bstreap_simulate_lnn(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_lnn(input);
     } else if(strcmp(type,"lsu") == 0) {
-      km = krapivsky_bstreap_simulate_lsu(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_lsu(input);
     } else if(strcmp(type,"lsn") == 0) {
-      km = krapivsky_bstreap_simulate_lsn(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_lsn(input);
     } else if(strcmp(type,"heap") == 0) {
-      km = krapivsky_heap_simulate(p, lambda, mu, target_n_nodes);
+      km = krapivsky_heap_simulate(input);
     } else if(strcmp(type,"lnupareto")) {
-      km = krapivsky_bstreap_simulate_pareto_lnu(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_pareto_lnu(input);
     } else if(strcmp(type,"lnnpareto") == 0) {
-      km = krapivsky_bstreap_simulate_pareto_lnn(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_pareto_lnn(input);
     } else if(strcmp(type,"lsupareto") == 0) {
-      km = krapivsky_bstreap_simulate_pareto_lsu(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_pareto_lsu(input);
     } else if(strcmp(type,"lsnpareto") == 0) {
-      km = krapivsky_bstreap_simulate_pareto_lsn(p, lambda, mu, target_n_nodes);
+      km = krapivsky_bstreap_simulate_pareto_lsn(input);
     } else if(strcmp(type,"heappareto") == 0) {
-      km = krapivsky_heap_simulate_pareto(p, lambda, mu, target_n_nodes);
+      km = krapivsky_heap_simulate_pareto(input);
     } else {
       printf("Unknown type: %s\n",type);
       return 1;
@@ -155,6 +160,7 @@ int main(int argc, char **argv) {
       times[i] = ((double) (t2 - t1))/CLOCKS_PER_SEC;  //time in seconds
       fprintf(time_file, "%lf\n", times[i]);  
     }
+    //free model and input
     krapivsky_free(km);
   }
 

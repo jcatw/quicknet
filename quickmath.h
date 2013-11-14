@@ -7,5 +7,4 @@ unsigned int rand_init(char *base_dir, char *seed_name);
 double sample_fitness_pareto(double alpha);
 double identity(double x);
 
-
 #endif /* QUICKNET_QUICKMATH_H */
