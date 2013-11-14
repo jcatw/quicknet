@@ -61,9 +61,10 @@ heap_insert(heap_t *heap,
             node_t *node,
             double (*compute_mass) (node_t*),
             double (*compute_priority) (heap_item_t*)) {
-  heap_item_t *item, *parent_item;
+  heap_item_t *item;
+  //heap_item_t *parent_item;
   double node_mass;
-  uint64_t parent_index;
+  //uint64_t parent_index;
   
   item = make_heap_item(node, compute_mass, compute_priority);
   item->index = heap->n_nodes;
@@ -96,13 +97,23 @@ heap_insert(heap_t *heap,
 }
 
 void
-heap_in_degree_insert(heap_t *heap, node_t *node) {
+heap_in_degree_linear_insert(heap_t *heap, node_t *node) {
   heap_insert(heap, node, get_linear_in_degree, heap_item_get_node_mass);
 }
 
 void
-heap_out_degree_insert(heap_t *heap, node_t *node) {
+heap_out_degree_linear_insert(heap_t *heap, node_t *node) {
   heap_insert(heap, node, get_linear_out_degree, heap_item_get_node_mass);
+}
+
+void
+heap_in_degree_quadratic_insert(heap_t *heap, node_t *node) {
+  heap_insert(heap, node, get_quadratic_in_degree, heap_item_get_node_mass);
+}
+
+void
+heap_out_degree_quadratic_insert(heap_t *heap, node_t *node) {
+  heap_insert(heap, node, get_quadratic_out_degree, heap_item_get_node_mass);
 }
 
 void
@@ -111,13 +122,13 @@ heap_increase_priority(heap_t *heap,
                        double new_priority,
                        double (*compute_priority)(heap_item_t*),
                        void (*set_priority)(heap_item_t*,double)) {
+  // assumes that priority and node mass are one and the same
   double new_mass;
   if (new_priority < compute_priority(item)) {
     fprintf(stderr,"New priority is smaller than current priority.\n");
     return;
   }
 
-  // this is ugly and assumes node mass and priority are coupled, fix
   new_mass = new_priority - item->node_mass;
   
   set_priority(item,new_priority);
@@ -179,7 +190,7 @@ heap_exchange(heap_t *heap, heap_item_t *child, heap_item_t *parent) {
 }
 
 node_t *
-heap_sample_increment(heap_t *heap) {
+heap_sample_increment(heap_t *heap, double (*compute_new_mass)(heap_item_t *item)) {
   double uniform_sample;
   node_t *sampled_node;
 
@@ -188,21 +199,41 @@ heap_sample_increment(heap_t *heap) {
   if(heap->n_nodes == 0)
     return NULL;
   
-  sampled_node = heap_item_sample_increment(heap, heap->items[0], 0., uniform_sample);
-  heap->total_mass += 1; //assumes linear
+  sampled_node = heap_item_sample_increment(heap, heap->items[0], 0., uniform_sample, compute_new_mass);
+
+  // no longer do this - increment total mass in heap_item_sample_increment
+  //heap->total_mass += 1; //assumes linear
+  
   return sampled_node;
+}
+
+node_t *
+heap_sample_increment_linear(heap_t *heap) {
+  return heap_sample_increment(heap, compute_linear_new_mass);
+}
+
+node_t *
+heap_sample_increment_quadratic_in_degree(heap_t *heap) {
+  return heap_sample_increment(heap, compute_quadratic_new_mass_in_degree);
+}
+
+node_t *
+heap_sample_increment_quadratic_out_degree(heap_t *heap) {
+  return heap_sample_increment(heap, compute_quadratic_new_mass_out_degree);
 }
 
 node_t *
 heap_item_sample_increment(heap_t *heap,
                            heap_item_t *item,
                            double observed_mass,
-                           double uniform_sample) {
+                           double uniform_sample,
+                           double (*compute_new_mass)(heap_item_t *item)) {
   node_t *sampled_node;
-
+  double old_mass;
+  
   if(heap_left(heap, item) != NULL) {
     if (uniform_sample < (observed_mass + heap_left(heap, item)->subtree_mass) / heap->total_mass) {
-      sampled_node = heap_item_sample_increment(heap, heap_left(heap, item), observed_mass, uniform_sample);
+      sampled_node = heap_item_sample_increment(heap, heap_left(heap, item), observed_mass, uniform_sample,compute_new_mass);
       return sampled_node;
     }
     observed_mass += heap_left(heap, item)->subtree_mass;
@@ -210,17 +241,38 @@ heap_item_sample_increment(heap_t *heap,
 
   observed_mass += item->node_mass;
   if (uniform_sample < observed_mass / heap->total_mass) {
+    old_mass = item->node_mass;
     sampled_node = item->node;
-    heap_increase_priority(heap, item, item->node_mass+1., heap_item_get_node_mass, heap_item_set_node_mass);
+    heap_increase_priority(heap,
+                           item,
+                           compute_new_mass(item),
+                           heap_item_get_node_mass,
+                           heap_item_set_node_mass);
+    heap->total_mass += item->node_mass - old_mass;
     return sampled_node;
   }
 
   if (heap_right(heap, item) != NULL) {
-    sampled_node = heap_item_sample_increment(heap, heap_right(heap, item), observed_mass, uniform_sample);
+    sampled_node = heap_item_sample_increment(heap, heap_right(heap, item), observed_mass, uniform_sample, compute_new_mass);
     return sampled_node;
   }
   fprintf(stderr, "Failed to sample a heap node.\n");
   return NULL; //should not happen!
+}
+
+double
+compute_linear_new_mass(heap_item_t *item) {
+  return item->node_mass + 1.;
+}
+
+double
+compute_quadratic_new_mass_in_degree(heap_item_t *item) {
+  return item->node_mass + (2. * item->node->in_degree) + 1;
+}
+
+double
+compute_quadratic_new_mass_out_degree(heap_item_t *item) {
+  return item->node_mass + (2. * item->node->out_degree) + 1;
 }
 
 double

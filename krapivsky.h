@@ -61,7 +61,8 @@ void make_bstreap_item_seed_lnu(krapivsky_model_t *km);
 void make_bstreap_item_seed_lnn(krapivsky_model_t *km);
 void make_bstreap_item_seed_lsu(krapivsky_model_t *km);
 void make_bstreap_item_seed_lsn(krapivsky_model_t *km);
-void make_heap_item_seed(krapivsky_model_t *km);
+void make_heap_item_seed_linear(krapivsky_model_t *km);
+void make_heap_item_seed_quadratic(krapivsky_model_t *km);
 int8_t krapivsky_done(krapivsky_model_t *km, uint64_t target_n_nodes);
 void krapivsky_next(krapivsky_model_t *km,
                     void (*node_adder) (krapivsky_model_t *km, node_t *new_node),
@@ -80,8 +81,10 @@ void make_krapivsky_bstreaps(krapivsky_model_t *km);
 void make_krapivsky_heaps(krapivsky_model_t *km);
 node_t *krapivsky_bstreap_in_degree_sampler(krapivsky_model_t *km);
 node_t *krapivsky_bstreap_out_degree_sampler(krapivsky_model_t *km);
-node_t *krapivsky_heap_in_degree_sampler(krapivsky_model_t *km);
-node_t *krapivsky_heap_out_degree_sampler(krapivsky_model_t *km);
+node_t *krapivsky_heap_linear_in_degree_sampler(krapivsky_model_t *km);
+node_t *krapivsky_heap_linear_out_degree_sampler(krapivsky_model_t *km);
+node_t *krapivsky_heap_quadratic_in_degree_sampler(krapivsky_model_t *km);
+node_t *krapivsky_heap_quadratic_out_degree_sampler(krapivsky_model_t *km);
 void krapivsky_bstreap_in_degree_indexer_lnu(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_out_degree_indexer_lnu(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_in_degree_indexer_lnn(krapivsky_model_t *km, node_t *node);
@@ -93,11 +96,16 @@ void krapivsky_bstreap_out_degree_indexer_lsn(krapivsky_model_t *km, node_t *nod
 void krapivsky_null_indexer(krapivsky_model_t *km, node_t *node);
 void krapivsky_heap_in_degree_indexer(krapivsky_model_t *km, node_t *node);
 void krapivsky_heap_out_degree_indexer(krapivsky_model_t *km, node_t *node);
+void krapivsky_heap_in_degree_linear_indexer(krapivsky_model_t *km, node_t *node);
+void krapivsky_heap_out_degree_quadratic_indexer(krapivsky_model_t *km, node_t *node);
+void krapivsky_heap_in_degree_quadratic_indexer(krapivsky_model_t *km, node_t *node);
+void krapivsky_heap_out_degree_linear_indexer(krapivsky_model_t *km, node_t *node);
 void krapivsky_bstreap_node_adder_lnu(krapivsky_model_t *km, node_t *new_node);
 void krapivsky_bstreap_node_adder_lnn(krapivsky_model_t *km, node_t *new_node);
 void krapivsky_bstreap_node_adder_lsu(krapivsky_model_t *km, node_t *new_node);
 void krapivsky_bstreap_node_adder_lsn(krapivsky_model_t *km, node_t *new_node);
-void krapivsky_heap_node_adder(krapivsky_model_t *km, node_t *new_node);
+void krapivsky_heap_linear_node_adder(krapivsky_model_t *km, node_t *new_node);
+void krapivsky_heap_quadratic_node_adder(krapivsky_model_t *km, node_t *new_node);
 
 // curried functions
 krapivsky_input_t *krapivsky_make_input(double p,
@@ -117,4 +125,5 @@ krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lnn(krapivsky_input_t *inpu
 krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsu(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsn(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_heap_simulate_pareto(krapivsky_input_t *input);
+krapivsky_model_t *krapivsky_heap_simulate_quadratic(krapivsky_input_t *input);
 #endif /* QUICKNET_KRAPIVSKY_H */

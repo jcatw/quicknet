@@ -52,11 +52,19 @@ double get_linear_in_degree(node_t *node) {
   return (double) node->in_degree + node->lambda;
 }
 
+double get_quadratic_in_degree(node_t *node) {
+  return (double) (node->in_degree * node->in_degree) + node->lambda;
+}
+
 double get_out_degree(node_t *node) {
   return (double) node->out_degree;
 }
 
 double get_linear_out_degree(node_t *node) {
+  return (double) node->out_degree + node->mu;
+}
+
+double get_quadratic_out_degree(node_t *node) {
   return (double) node->out_degree + node->mu;
 }
 

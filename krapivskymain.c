@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
       km = krapivsky_bstreap_simulate_lsn(input);
     } else if(strcmp(type,"heap") == 0) {
       km = krapivsky_heap_simulate(input);
-    } else if(strcmp(type,"lnupareto")) {
+    } else if(strcmp(type,"lnupareto") == 0) {
       km = krapivsky_bstreap_simulate_pareto_lnu(input);
     } else if(strcmp(type,"lnnpareto") == 0) {
       km = krapivsky_bstreap_simulate_pareto_lnn(input);
@@ -144,6 +144,8 @@ int main(int argc, char **argv) {
       km = krapivsky_bstreap_simulate_pareto_lsn(input);
     } else if(strcmp(type,"heappareto") == 0) {
       km = krapivsky_heap_simulate_pareto(input);
+    } else if(strcmp(type,"heapquadratic") == 0) {
+      km = krapivsky_heap_simulate_quadratic(input);
     } else {
       printf("Unknown type: %s\n",type);
       return 1;
