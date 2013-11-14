@@ -6,7 +6,6 @@
 #  4: p
 #  5: lambda
 #  6: mu
-
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,12 +13,22 @@ import statsmodels.api as sm
 import os.path
 from itertools import groupby
 
+# where to begin and end line fitting
+#tail_begins = 1    
+tail_begins = 1    
+#tail_ends = 100000
+# minimum count of degrees considered
+minimum_count = 1  
+
+
 ### functions
 def plottable_ccdf(x,y):
     """
     Given independent variable x and unnormalized pmf y, return a plottable log-log ccdf.
     """
+    #fx = np.log10(x[np.logical_and(x >= tail_begins,x <= tail_ends,y >= minimum_count)][:-1])
     fx = np.log10(x[np.logical_and(x >= tail_begins,y >= minimum_count)][:-1])
+    #fy = np.log10((1. - (y.cumsum() / y.cumsum()[-1]))[np.logical_and(x >= tail_begins,x <= tail_ends,y >= minimum_count)][:-1])
     fy = np.log10((1. - (y.cumsum() / y.cumsum()[-1]))[np.logical_and(x >= tail_begins,y >= minimum_count)][:-1])
 
     return fx, fy
@@ -88,8 +97,6 @@ def edgelist_to_plottable_ccdf(edgelist):
     return plottable_x_out, plottable_y_out, plottable_x_in, plottable_y_in
     
 ### script
-tail_begins = 1    # where to begin plotting
-minimum_count = 1  # minimum count of degrees considered
 
 input_file_name = sys.argv[1]
 input_edge_file_name = sys.argv[2]
