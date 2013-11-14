@@ -394,7 +394,7 @@ krapivsky_make_input(double p,
                      double lambda,
                      double mu,
                      uint64_t target_n_nodes) {
-  krapivsky_input_t *input = malloc(sizeof(krapivsky_input_t));
+  krapivsky_input_t *input = (krapivsky_input_t*) malloc(sizeof(krapivsky_input_t));
   if(!input) return 0;
   input->p = p;
   input->lambda = lambda;

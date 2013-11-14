@@ -160,9 +160,9 @@ int main(int argc, char **argv) {
       times[i] = ((double) (t2 - t1))/CLOCKS_PER_SEC;  //time in seconds
       fprintf(time_file, "%lf\n", times[i]);  
     }
-    //free model and input
     krapivsky_free(km);
   }
+  free(input);
 
   // output and clean up timing data
   if(write_time) {
