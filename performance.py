@@ -28,7 +28,13 @@ medium_sizes = {'heap':np.array([100,1000,10000,100000,1000000]),
                 'lsu': np.array([100,1000,10000,100000,1000000]),
                 'lsn': np.array([100,1000,10000,100000,1000000])}
 
-sizes = small_sizes
+large_sizes = {'heap':np.array([100,1000,10000,100000,1000000,10000000]),
+               'lnu': np.array([100,1000,10000,100000,1000000,10000000]),
+               'lnn': np.array([100,1000,10000,100000]),
+               'lsu': np.array([100,1000,10000,100000,1000000,10000000]),
+               'lsn': np.array([100,1000,10000,100000,1000000,10000000])}
+
+sizes = large_sizes
     
 times = {'heap': {},
          'lnu':  {},
@@ -52,7 +58,7 @@ if simulate:
             timefile = "time_%s.csv" % (size,)
             randfile = "randomseed_%s.csv" % (size,)
             ensure_dir(output_path)
-            runner = "./quicknet -o %s -r %d -n %d -t %s -u %s -s %s" % (output_path, n_runs, size, simtype, timefile, randfile)
+            runner = "./quicknet -p 0.2 -l 3.5 -m 1.8 -o %s -r %d -n %d -t %s -u %s -s %s" % (output_path, n_runs, size, simtype, timefile, randfile)
             print runner
             os.system(runner)
 
