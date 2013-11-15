@@ -4,6 +4,8 @@
 # arg 2: number of nodes
 import sys
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 
 outpath = sys.argv[1]
 n_nodes = int(sys.argv[2])
@@ -34,3 +36,16 @@ os.system(run_string_nonlinear)
 
 print run_octave_string
 os.system(run_octave_string)
+
+#heat_data = np.genfromtxt(heat_file, dtype=float, delimiter=',', names=False)
+f = open(heat_file,"r")
+heat_data = np.array([[float(x) for x in line.strip().split(",")] for line in f.xreadlines()])
+heat_x = np.array(range(heat_data.shape[1]))
+
+plt.figure()
+plt.ylabel("heat")
+plt.xlabel("tstep")
+plt.title("Transient Heat Behavior")
+plt.plot(heat_x, heat_data[0,:], heat_x, heat_data[1,:], heat_x, heat_data[2,:])
+plt.legend(("Linear", "Pareto Fitness", "Quadratic"))
+plt.savefig(outpath+"/heat.png")
