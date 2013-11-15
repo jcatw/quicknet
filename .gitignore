@@ -5,3 +5,4 @@ analysis/
 Makefile.bak
 TAGS
 *.csv
+octave-core
