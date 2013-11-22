@@ -10,7 +10,7 @@ import sys
 import os
 import matplotlib.pyplot as plt
 
-alphas = [1.0, 1.2, 1.4, 1.8, 2.0]
+alphas = [1.0, 1.01, 1.02, 1.03, 1.04, 1.05, 1.10, 1.15, 1.2, 1.4, 1.8, 2.0]
 
 p = float(sys.argv[1])
 lamb = float(sys.argv[2])
@@ -33,7 +33,7 @@ if simulate:
                                                                                                                                lamb,
                                                                                                                                mu,
                                                                                                                                target_n_nodes,
-                                                                                                                               int(alpha*10))
+                                                                                                                               int(round(alpha*100.)))
         print run_string
         os.system(run_string)
 

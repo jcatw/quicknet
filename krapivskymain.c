@@ -158,18 +158,32 @@ int main(int argc, char **argv) {
       km = krapivsky_heap_simulate_pareto(input);
     } else if(strcmp(type,"heapquadratic") == 0) {
       km = krapivsky_heap_simulate_quadratic(input);
-    } else if(strcmp(type,"heapalpha10") == 0) {
-      km = krapivsky_heap_simulate_alpha_10(input);
-    } else if(strcmp(type,"heapalpha12") == 0) {
-      km = krapivsky_heap_simulate_alpha_12(input);
-    } else if(strcmp(type,"heapalpha14") == 0) {
-      km = krapivsky_heap_simulate_alpha_14(input);
-    } else if(strcmp(type,"heapalpha16") == 0) {
-      km = krapivsky_heap_simulate_alpha_16(input);
-    } else if(strcmp(type,"heapalpha18") == 0) {
-      km = krapivsky_heap_simulate_alpha_18(input);
-    } else if(strcmp(type,"heapalpha20") == 0) {
-      km = krapivsky_heap_simulate_alpha_20(input);
+    } else if(strcmp(type,"heapalpha100") == 0) {
+      km = krapivsky_heap_simulate_alpha_100(input);
+    } else if(strcmp(type,"heapalpha101") == 0) {
+      km = krapivsky_heap_simulate_alpha_101(input);
+    } else if(strcmp(type,"heapalpha102") == 0) {
+      km = krapivsky_heap_simulate_alpha_102(input);
+    } else if(strcmp(type,"heapalpha103") == 0) {
+      km = krapivsky_heap_simulate_alpha_103(input);
+    } else if(strcmp(type,"heapalpha104") == 0) {
+      km = krapivsky_heap_simulate_alpha_104(input);
+    } else if(strcmp(type,"heapalpha105") == 0) {
+      km = krapivsky_heap_simulate_alpha_105(input);
+    } else if(strcmp(type,"heapalpha110") == 0) {
+      km = krapivsky_heap_simulate_alpha_110(input);
+    } else if(strcmp(type,"heapalpha115") == 0) {
+      km = krapivsky_heap_simulate_alpha_115(input);
+    } else if(strcmp(type,"heapalpha120") == 0) {
+      km = krapivsky_heap_simulate_alpha_120(input);
+    } else if(strcmp(type,"heapalpha140") == 0) {
+      km = krapivsky_heap_simulate_alpha_140(input);
+    } else if(strcmp(type,"heapalpha160") == 0) {
+      km = krapivsky_heap_simulate_alpha_160(input);
+    } else if(strcmp(type,"heapalpha180") == 0) {
+      km = krapivsky_heap_simulate_alpha_180(input);
+    } else if(strcmp(type,"heapalpha200") == 0) {
+      km = krapivsky_heap_simulate_alpha_200(input);
     } else {
       printf("Unknown type: %s\n",type);
       return 1;
