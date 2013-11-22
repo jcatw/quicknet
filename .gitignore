@@ -6,3 +6,5 @@ Makefile.bak
 TAGS
 *.csv
 octave-core
+heat.c
+heat.h
