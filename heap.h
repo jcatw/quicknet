@@ -19,6 +19,15 @@ struct heap_item {
   double subtree_mass;
 };
 
+#define MAKE_HEAP_PREF_HEADERS(name)                                    \
+  void heap_in_degree_ ## name ## _insert(heap_t *heap, node_t *node);     \
+  void heap_out_degree_ ## name ## _insert(heap_t *heap, node_t *node);    \
+  node_t *heap_sample_increment_ ## name ## _in_degree(heap_t *heap);      \
+  node_t *heap_sample_increment_ ## name ## _out_degree(heap_t *heap);     \
+  double compute_ ## name ## _new_mass_in_degree(heap_item_t *item);       \
+  double compute_ ## name ## _new_mass_out_degree(heap_item_t *item);      
+  
+  
 heap_t *make_heap();
 heap_item_t *make_heap_item(node_t *n,
                             double (*compute_mass) (node_t*),
@@ -58,4 +67,12 @@ double heap_item_get_priority(heap_item_t *item);
 void heap_item_set_priority(heap_item_t *item, double priority);
 
 void heap_free(heap_t *heap);
+
+//macro-defined
+MAKE_HEAP_PREF_HEADERS(alpha_10)
+MAKE_HEAP_PREF_HEADERS(alpha_12)
+MAKE_HEAP_PREF_HEADERS(alpha_14)
+MAKE_HEAP_PREF_HEADERS(alpha_16)
+MAKE_HEAP_PREF_HEADERS(alpha_18)
+MAKE_HEAP_PREF_HEADERS(alpha_20)
 #endif /* QUICKNET_HEAP_H */

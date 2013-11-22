@@ -48,6 +48,13 @@ int main(int argc, char **argv) {
   char edge_file_fullname[BUFSIZE];
   // write out the network's edges?
   int write_edges = 0;
+
+  // degree output filename
+  char degree_file_name[BUFSIZE] = "degree.csv";
+  char degree_file_fullname[BUFSIZE];
+  char run_degree_file_fullname[BUFSIZE];
+  // write out the network's edges?
+  int write_degree = 0;
   
   // output filename for each run, constructed automatically
   char run_file_fullname[BUFSIZE];
@@ -68,8 +75,12 @@ int main(int argc, char **argv) {
   char type[BUFSIZE] = "heap";
   
   // parse command line args
-  while((c = getopt(argc, argv, "s:e:t:p:m:l:n:o:r:u:")) != -1){
+  while((c = getopt(argc, argv, "d:s:e:t:p:m:l:n:o:r:u:")) != -1){
     switch(c) {
+    case 'd':
+      write_degree = 1;
+      strcpy(degree_file_name, optarg);
+      break;
     case 's':
       strcpy(random_seed_file_name, optarg);
       break;
@@ -108,6 +119,7 @@ int main(int argc, char **argv) {
   // prepend basedir to filenames
   sprintf(edge_file_fullname, "%s/%s", base_dir_name, edge_file_name);
   sprintf(time_file_fullname, "%s/%s", base_dir_name, time_file_name);
+  sprintf(degree_file_fullname, "%s/%s", base_dir_name, degree_file_name);
 
   // initialize pseudorandom number generator
   rand_init(base_dir_name, random_seed_file_name);
@@ -146,6 +158,18 @@ int main(int argc, char **argv) {
       km = krapivsky_heap_simulate_pareto(input);
     } else if(strcmp(type,"heapquadratic") == 0) {
       km = krapivsky_heap_simulate_quadratic(input);
+    } else if(strcmp(type,"heapalpha10") == 0) {
+      km = krapivsky_heap_simulate_alpha_10(input);
+    } else if(strcmp(type,"heapalpha12") == 0) {
+      km = krapivsky_heap_simulate_alpha_12(input);
+    } else if(strcmp(type,"heapalpha14") == 0) {
+      km = krapivsky_heap_simulate_alpha_14(input);
+    } else if(strcmp(type,"heapalpha16") == 0) {
+      km = krapivsky_heap_simulate_alpha_16(input);
+    } else if(strcmp(type,"heapalpha18") == 0) {
+      km = krapivsky_heap_simulate_alpha_18(input);
+    } else if(strcmp(type,"heapalpha20") == 0) {
+      km = krapivsky_heap_simulate_alpha_20(input);
     } else {
       printf("Unknown type: %s\n",type);
       return 1;
@@ -161,6 +185,13 @@ int main(int argc, char **argv) {
     if(write_time) {
       times[i] = ((double) (t2 - t1))/CLOCKS_PER_SEC;  //time in seconds
       fprintf(time_file, "%lf\n", times[i]);  
+    }
+    if(write_degree) {
+      sprintf(run_degree_file_fullname,
+              "%s_%llu",
+              degree_file_fullname,
+              i);
+      krapivsky_write_degrees(km,run_degree_file_fullname);
     }
     krapivsky_free(km);
   }

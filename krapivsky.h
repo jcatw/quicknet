@@ -48,6 +48,17 @@ struct krapivsky_input {
   void (*existing_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node);
 };
 
+// This architecture lead to a lot of repitition.  This macro defines
+// the prototypes for all of the functions needed to add a new
+// preference function.
+#define MAKE_KRAPIV_PREF_HEADERS(name) \
+  void krapivsky_input_ ## name ## _heap(krapivsky_input_t *inputt); \
+  node_t *krapivsky_heap_ ## name ## _in_degree_sampler(krapivsky_model_t *km); \
+  node_t *krapivsky_heap_ ## name ## _out_degree_sampler(krapivsky_model_t *km); \
+  void krapivsky_heap_in_degree_ ## name ## _indexer(krapivsky_model_t *km, node_t *node); \
+  void krapivsky_heap_out_degree_ ## name ## _indexer(krapivsky_model_t *km, node_t *node); \
+  krapivsky_model_t *krapivsky_heap_simulate_ ## name(krapivsky_input_t *input);
+
 // general functions
 krapivsky_model_t *make_krapivsky_model(double p,
                                         double lambda,
@@ -74,6 +85,7 @@ void krapivsky_next(krapivsky_model_t *km,
                     void (*existing_node_out_degree_indexer) (krapivsky_model_t *km, node_t *node));
 krapivsky_model_t* krapivsky_simulate(krapivsky_input_t *input);
 void krapivsky_write_edges(krapivsky_model_t *km, char *filename);
+void krapivsky_write_degrees(krapivsky_model_t *km, char *filename);
 void krapivsky_free(krapivsky_model_t *km);
 
 // abstraction providers
@@ -126,4 +138,12 @@ krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsu(krapivsky_input_t *inpu
 krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsn(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_heap_simulate_pareto(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_heap_simulate_quadratic(krapivsky_input_t *input);
+
+// macro-defined
+MAKE_KRAPIV_PREF_HEADERS(alpha_10)
+MAKE_KRAPIV_PREF_HEADERS(alpha_12)
+MAKE_KRAPIV_PREF_HEADERS(alpha_14)
+MAKE_KRAPIV_PREF_HEADERS(alpha_16)
+MAKE_KRAPIV_PREF_HEADERS(alpha_18)
+MAKE_KRAPIV_PREF_HEADERS(alpha_20)
 #endif /* QUICKNET_KRAPIVSKY_H */
