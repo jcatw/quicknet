@@ -15,6 +15,7 @@
 #define BUFSIZE 1024
 #endif
 #include "quickmath.h"
+#include "alphas.h"
 
 int main(int argc, char **argv) {
   // counter

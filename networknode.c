@@ -4,14 +4,7 @@
 
 #include "networknode.h"
 
-#define MAKE_NODE_PREF_FUNCTIONS(name, alphavalue) \
-  double get_ ## name ## _in_degree(node_t *node) {                     \
-  return pow(node->in_degree, alphavalue) + node->lambda;                 \
-  }                                                                     \
-  double get_ ## name ## _out_degree(node_t *node) {                    \
-  return pow(node->out_degree, alphavalue) + node->mu;                    \
-  }                                                                     
-  
+
 node_t *
 make_node(uint64_t id, double lambda, double mu) {
   node_t *n = (node_t*) malloc(sizeof(*n));
@@ -90,16 +83,16 @@ void node_list_free(node_list_t *node_list) {
 }
 
 // macro-defined
-MAKE_NODE_PREF_FUNCTIONS(alpha_100, 1.0)
-MAKE_NODE_PREF_FUNCTIONS(alpha_101, 1.01)
-MAKE_NODE_PREF_FUNCTIONS(alpha_102, 1.02)
-MAKE_NODE_PREF_FUNCTIONS(alpha_103, 1.03)
-MAKE_NODE_PREF_FUNCTIONS(alpha_104, 1.04)
-MAKE_NODE_PREF_FUNCTIONS(alpha_105, 1.05)
-MAKE_NODE_PREF_FUNCTIONS(alpha_110, 1.1)
-MAKE_NODE_PREF_FUNCTIONS(alpha_115, 1.15)
-MAKE_NODE_PREF_FUNCTIONS(alpha_120, 1.2)
-MAKE_NODE_PREF_FUNCTIONS(alpha_140, 1.4)
-MAKE_NODE_PREF_FUNCTIONS(alpha_160, 1.6)
-MAKE_NODE_PREF_FUNCTIONS(alpha_180, 1.8)
-MAKE_NODE_PREF_FUNCTIONS(alpha_200, 2.0)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_100, 1.0)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_101, 1.01)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_102, 1.02)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_103, 1.03)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_104, 1.04)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_105, 1.05)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_110, 1.1)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_115, 1.15)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_120, 1.2)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_140, 1.4)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_160, 1.6)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_180, 1.8)
+//MAKE_NODE_PREF_FUNCTIONS(alpha_200, 2.0)

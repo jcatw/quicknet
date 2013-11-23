@@ -11,11 +11,11 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = bstreap.c heap.c krapivsky.c krapivskymain.c networknode.c quickmath.c
-OBJS = bstreap.o heap.o krapivsky.o krapivskymain.o networknode.o quickmath.o
+SRCS = alphas.c bstreap.c heap.c krapivsky.c krapivskymain.c networknode.c quickmath.c
+OBJS = alphas.o bstreap.o heap.o krapivsky.o krapivskymain.o networknode.o quickmath.o
 EXE = quicknet
 
-HDRS = bstreap.h heap.h krapivsky.h networknode.h quickmath.h
+HDRS = alphas.h bstreap.h heap.h krapivsky.h networknode.h quickmath.h
 
 #vpath %.o build/objects/c
 #vpath %.cc src/c
@@ -44,9 +44,10 @@ $(EXE): $(OBJS)
 
 # DO NOT DELETE: updated by make depend
 
+alphas.o: alphas.h networknode.h heap.h krapivsky.h
 bstreap.o: networknode.h bstreap.h
 heap.o: networknode.h heap.h
-krapivsky.o: networknode.h heap.h bstreap.h krapivsky.h
+krapivsky.o: networknode.h heap.h bstreap.h krapivsky.h quickmath.h
 krapivskymain.o: networknode.h bstreap.h heap.h krapivsky.h quickmath.h
 networknode.o: networknode.h
 quickmath.o: quickmath.h

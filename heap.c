@@ -6,31 +6,6 @@
 #include "networknode.h"
 #include "heap.h"
 
-#define MAKE_HEAP_PREF_FUNCTIONS(name, alphavalue)                      \
-  void                                                                  \
-  heap_in_degree_ ## name ## _insert(heap_t *heap, node_t *node) {      \
-    heap_insert(heap, node, get_ ## name ## _in_degree, heap_item_get_node_mass); \
-  }                                                                     \
-  void                                                                  \
-  heap_out_degree_ ## name ## _insert(heap_t *heap, node_t *node) {     \
-    heap_insert(heap, node, get_ ## name ## _out_degree, heap_item_get_node_mass); \
-  }                                                                     \
-  node_t *                                                              \
-  heap_sample_increment_ ## name ## _in_degree(heap_t *heap) {          \
-    return heap_sample_increment(heap, compute_ ## name ## _new_mass_in_degree); \
-  }                                                                     \
-  node_t *                                                              \
-  heap_sample_increment_ ## name ## _out_degree(heap_t *heap) {         \
-    return heap_sample_increment(heap, compute_ ## name ## _new_mass_out_degree); \
-  }                                                                     \
-  double                                                                \
-  compute_ ## name ## _new_mass_in_degree(heap_item_t *item) {          \
-    return pow(item->node->in_degree + 1, alphavalue) + item->node->lambda; \
-  }                                                                     \
-  double                                                                \
-  compute_ ## name ## _new_mass_out_degree(heap_item_t *item) {         \
-    return pow(item->node->out_degree + 1, alphavalue) + item->node->mu; \
-  }
 
 heap_t *
 make_heap() {
@@ -342,16 +317,16 @@ heap_free(heap_t *heap) {
 //}
 
 // macro-defined
-MAKE_HEAP_PREF_FUNCTIONS(alpha_100, 1.0)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_101, 1.01)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_102, 1.02)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_103, 1.03)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_104, 1.04)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_105, 1.05)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_110, 1.1)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_115, 1.15)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_120, 1.2)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_140, 1.4)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_160, 1.6)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_180, 1.8)
-MAKE_HEAP_PREF_FUNCTIONS(alpha_200, 2.0)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_100, 1.0)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_101, 1.01)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_102, 1.02)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_103, 1.03)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_104, 1.04)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_105, 1.05)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_110, 1.1)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_115, 1.15)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_120, 1.2)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_140, 1.4)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_160, 1.6)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_180, 1.8)
+//MAKE_HEAP_PREF_FUNCTIONS(alpha_200, 2.0)

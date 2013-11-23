@@ -27,6 +27,31 @@ struct heap_item {
   double compute_ ## name ## _new_mass_in_degree(heap_item_t *item);       \
   double compute_ ## name ## _new_mass_out_degree(heap_item_t *item);      
   
+#define MAKE_HEAP_PREF_FUNCTIONS(name, alphavalue)                      \
+  void                                                                  \
+  heap_in_degree_ ## name ## _insert(heap_t *heap, node_t *node) {      \
+    heap_insert(heap, node, get_ ## name ## _in_degree, heap_item_get_node_mass); \
+  }                                                                     \
+  void                                                                  \
+  heap_out_degree_ ## name ## _insert(heap_t *heap, node_t *node) {     \
+    heap_insert(heap, node, get_ ## name ## _out_degree, heap_item_get_node_mass); \
+  }                                                                     \
+  node_t *                                                              \
+  heap_sample_increment_ ## name ## _in_degree(heap_t *heap) {          \
+    return heap_sample_increment(heap, compute_ ## name ## _new_mass_in_degree); \
+  }                                                                     \
+  node_t *                                                              \
+  heap_sample_increment_ ## name ## _out_degree(heap_t *heap) {         \
+    return heap_sample_increment(heap, compute_ ## name ## _new_mass_out_degree); \
+  }                                                                     \
+  double                                                                \
+  compute_ ## name ## _new_mass_in_degree(heap_item_t *item) {          \
+    return pow(item->node->in_degree + 1, alphavalue) + item->node->lambda; \
+  }                                                                     \
+  double                                                                \
+  compute_ ## name ## _new_mass_out_degree(heap_item_t *item) {         \
+    return pow(item->node->out_degree + 1, alphavalue) + item->node->mu; \
+  }
   
 heap_t *make_heap();
 heap_item_t *make_heap_item(node_t *n,
@@ -69,17 +94,17 @@ void heap_item_set_priority(heap_item_t *item, double priority);
 void heap_free(heap_t *heap);
 
 //macro-defined
-MAKE_HEAP_PREF_HEADERS(alpha_100)
-MAKE_HEAP_PREF_HEADERS(alpha_101)
-MAKE_HEAP_PREF_HEADERS(alpha_102)
-MAKE_HEAP_PREF_HEADERS(alpha_103)
-MAKE_HEAP_PREF_HEADERS(alpha_104)
-MAKE_HEAP_PREF_HEADERS(alpha_105)
-MAKE_HEAP_PREF_HEADERS(alpha_110)
-MAKE_HEAP_PREF_HEADERS(alpha_115)
-MAKE_HEAP_PREF_HEADERS(alpha_120)
-MAKE_HEAP_PREF_HEADERS(alpha_140)
-MAKE_HEAP_PREF_HEADERS(alpha_160)
-MAKE_HEAP_PREF_HEADERS(alpha_180)
-MAKE_HEAP_PREF_HEADERS(alpha_200)
+//MAKE_HEAP_PREF_HEADERS(alpha_100)
+//MAKE_HEAP_PREF_HEADERS(alpha_101)
+//MAKE_HEAP_PREF_HEADERS(alpha_102)
+//MAKE_HEAP_PREF_HEADERS(alpha_103)
+//MAKE_HEAP_PREF_HEADERS(alpha_104)
+//MAKE_HEAP_PREF_HEADERS(alpha_105)
+//MAKE_HEAP_PREF_HEADERS(alpha_110)
+//MAKE_HEAP_PREF_HEADERS(alpha_115)
+//MAKE_HEAP_PREF_HEADERS(alpha_120)
+//MAKE_HEAP_PREF_HEADERS(alpha_140)
+//MAKE_HEAP_PREF_HEADERS(alpha_160)
+//MAKE_HEAP_PREF_HEADERS(alpha_180)
+//MAKE_HEAP_PREF_HEADERS(alpha_200)
 #endif /* QUICKNET_HEAP_H */
