@@ -93,6 +93,20 @@ void heap_item_set_priority(heap_item_t *item, double priority);
 
 void heap_free(heap_t *heap);
 
+void heap_padding(char ch, int n);
+void print_heap(heap_t *heap, double (*getter)(heap_item_t *item));
+void print_heap_item(heap_t *heap, heap_item_t *item, int level, double (*getter)(heap_item_t *item));
+double heap_item_node_id_getter(heap_item_t *item);
+double heap_item_node_in_degree_getter(heap_item_t *item);
+double heap_item_node_out_degree_getter(heap_item_t *item);
+double heap_item_node_mass_getter(heap_item_t *item);
+double heap_item_subtree_mass_getter(heap_item_t *item);
+void print_heap_node_id(heap_t *heap);
+void print_heap_node_in_degree(heap_t *heap);
+void print_heap_node_out_degree(heap_t *heap);
+void print_heap_node_mass(heap_t *heap);
+void print_heap_subtree_mass(heap_t *heap);
+
 //macro-defined
 //MAKE_HEAP_PREF_HEADERS(alpha_100)
 //MAKE_HEAP_PREF_HEADERS(alpha_101)

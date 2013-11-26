@@ -296,6 +296,72 @@ heap_free(heap_t *heap) {
   free(heap);
 }
 
+void
+heap_padding(char ch, int n) {
+  int i;
+
+  for(i=0; i<n; i++)
+    putchar(ch);
+}
+
+void print_heap(heap_t *heap, double (*getter)(heap_item_t *item)) {
+  if(heap->n_nodes > 0)
+    print_heap_item(heap, heap->items[0], 0, getter);
+}
+
+void print_heap_item(heap_t *heap, heap_item_t *item, int level, double (*getter)(heap_item_t *item)) {
+  if(item == NULL) {
+    heap_padding('\t', level);
+    puts("~");
+  }
+  else {
+    print_heap_item(heap, heap_right(heap,item), level + 1, getter);
+    heap_padding('\t', level);
+    printf("%.3lf\n", getter(item));
+    print_heap_item(heap, heap_left(heap,item), level + 1, getter);
+  }
+}
+
+double heap_item_node_id_getter(heap_item_t *item) {
+  return (double) item->node->id;
+}
+
+double heap_item_node_in_degree_getter(heap_item_t *item) {
+  return (double) item->node->in_degree;
+}
+
+double heap_item_node_out_degree_getter(heap_item_t *item) {
+  return (double) item->node->out_degree;
+}
+
+double heap_item_node_mass_getter(heap_item_t *item) {
+  return item->node_mass;
+}
+
+double heap_item_subtree_mass_getter(heap_item_t *item) {
+  return item->subtree_mass;
+}
+
+void print_heap_node_id(heap_t *heap) {
+  print_heap(heap, heap_item_node_id_getter);
+}
+
+void print_heap_node_in_degree(heap_t *heap) {
+  print_heap(heap, heap_item_node_in_degree_getter);
+}
+
+void print_heap_node_out_degree(heap_t *heap) {
+  print_heap(heap, heap_item_node_out_degree_getter);
+}
+
+void print_heap_node_mass(heap_t *heap) {
+  print_heap(heap, heap_item_node_mass_getter);
+}
+
+void print_heap_subtree_mass(heap_t *heap) {
+  print_heap(heap, heap_item_subtree_mass_getter);
+}
+  
 //double
 //heap_item_get_priority(heap_item_t *item) {
 //  return item->priority;

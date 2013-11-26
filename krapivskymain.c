@@ -17,6 +17,16 @@
 #include "quickmath.h"
 #include "alphas.h"
 
+#define RUN_IF_TYPE(typename) \
+  if(strcmp(type,#typename) == 0) {                        \
+    km = krapivsky_bstreap_simulate_ ## typename(input);   \
+  }
+#define ELSE_RUN_IF_TYPE(typename) \
+  else if(strcmp(type,#typename) == 0) {                  \
+    km = krapivsky_bstreap_simulate_ ## typename(input);   \
+  }
+
+
 int main(int argc, char **argv) {
   // counter
   uint64_t i;
@@ -171,18 +181,34 @@ int main(int argc, char **argv) {
       km = krapivsky_heap_simulate_alpha_104(input);
     } else if(strcmp(type,"heapalpha105") == 0) {
       km = krapivsky_heap_simulate_alpha_105(input);
+    } else if(strcmp(type,"heapalpha106") == 0) {
+      km = krapivsky_heap_simulate_alpha_106(input);
+    } else if(strcmp(type,"heapalpha107") == 0) {
+      km = krapivsky_heap_simulate_alpha_107(input);
+    } else if(strcmp(type,"heapalpha108") == 0) {
+      km = krapivsky_heap_simulate_alpha_108(input);
+    } else if(strcmp(type,"heapalpha109") == 0) {
+      km = krapivsky_heap_simulate_alpha_109(input);
     } else if(strcmp(type,"heapalpha110") == 0) {
       km = krapivsky_heap_simulate_alpha_110(input);
     } else if(strcmp(type,"heapalpha115") == 0) {
       km = krapivsky_heap_simulate_alpha_115(input);
     } else if(strcmp(type,"heapalpha120") == 0) {
       km = krapivsky_heap_simulate_alpha_120(input);
+    } else if(strcmp(type,"heapalpha130") == 0) {
+      km = krapivsky_heap_simulate_alpha_130(input);
     } else if(strcmp(type,"heapalpha140") == 0) {
       km = krapivsky_heap_simulate_alpha_140(input);
+    } else if(strcmp(type,"heapalpha150") == 0) {
+      km = krapivsky_heap_simulate_alpha_150(input);
     } else if(strcmp(type,"heapalpha160") == 0) {
       km = krapivsky_heap_simulate_alpha_160(input);
+    } else if(strcmp(type,"heapalpha170") == 0) {
+      km = krapivsky_heap_simulate_alpha_170(input);
     } else if(strcmp(type,"heapalpha180") == 0) {
       km = krapivsky_heap_simulate_alpha_180(input);
+    } else if(strcmp(type,"heapalpha190") == 0) {
+      km = krapivsky_heap_simulate_alpha_190(input);
     } else if(strcmp(type,"heapalpha200") == 0) {
       km = krapivsky_heap_simulate_alpha_200(input);
     } else {
