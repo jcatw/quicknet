@@ -77,9 +77,15 @@ void node_free(node_t *node) {
 }
 
 void node_list_free(node_list_t *node_list) {
-  if(node_list->next != NULL)
-    node_list_free(node_list->next);
-  free(node_list);
+  node_list_t *tmp;
+  while(node_list != NULL) {
+    tmp = node_list->next;
+    free(node_list);
+    node_list = tmp;
+  }
+  //if(node_list->next != NULL)
+  //  node_list_free(node_list->next);
+  //free(node_list);
 }
 
 // macro-defined
