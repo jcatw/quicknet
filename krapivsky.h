@@ -37,7 +37,8 @@ struct krapivsky_input {
   uint64_t target_n_nodes;
   void  (*set_maker)(krapivsky_model_t*);
   void  (*seed_maker)(krapivsky_model_t*);
-  double (*fitness_function)(double fitness);
+  double (*fitness_function_in)(double fitness, double p);
+  double (*fitness_function_out)(double fitness, double p);
   uint8_t index_type;
   void (*node_adder) (krapivsky_model_t *km, node_t *new_node);
   node_t* (*in_degree_sampler) (krapivsky_model_t *km);
@@ -129,7 +130,8 @@ krapivsky_model_t *make_krapivsky_model(double p,
                                         uint64_t target_n_nodes,
                                         void  (*set_maker)(krapivsky_model_t*),
                                         void  (*seed_maker)(krapivsky_model_t*),
-                                        double (*fitness_function)(double fitness),
+                                        double (*fitness_function_in)(double fitness, double p),
+                                        double (*fitness_function_out)(double fitness, double p),
                                         uint8_t index_type);
 void make_bstreap_item_seed_lnu(krapivsky_model_t *km);
 void make_bstreap_item_seed_lnn(krapivsky_model_t *km);

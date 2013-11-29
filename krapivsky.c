@@ -9,9 +9,6 @@
 #include "krapivsky.h"
 #include "quickmath.h"
 
-// This architecture lead to a lot of repitition.  This macro defines
-// that is needed for a new preference function.
-
 krapivsky_model_t *
 make_krapivsky_model(double p,
                      double lambda,
@@ -19,15 +16,16 @@ make_krapivsky_model(double p,
                      uint64_t target_n_nodes,
                      void  (*set_maker)(krapivsky_model_t*),
                      void  (*seed_maker)(krapivsky_model_t*),
-                     double (*fitness_function)(double fitness),
+                     double (*fitness_function_in)(double fitness, double p),
+                     double (*fitness_function_out)(double fitness, double p),
                      uint8_t index_type) {
   krapivsky_model_t *km = (krapivsky_model_t*) malloc(sizeof(*km));
   if (!km) return 0;
   (*set_maker)(km);
   km->index_type = index_type;
   km->p = p;
-  km->lambda = (*fitness_function)(lambda);
-  km->mu = (*fitness_function)(mu);
+  km->lambda = (*fitness_function_in)(lambda,p);
+  km->mu = (*fitness_function_out)(mu,p);
   km->nodes = (node_t**) malloc(target_n_nodes * sizeof(node_t**));
   (*seed_maker)(km);  
   return km;
@@ -241,7 +239,8 @@ krapivsky_simulate(krapivsky_input_t *input) {
                                                input->target_n_nodes,
                                                input->set_maker,
                                                input->seed_maker,
-                                               input->fitness_function,
+                                               input->fitness_function_in,
+                                               input->fitness_function_out,
                                                input->index_type);
   while(!krapivsky_done(km, input->target_n_nodes))
     krapivsky_next(km,
@@ -467,7 +466,8 @@ krapivsky_make_input(double p,
 
   // defaults
   // constant fitness
-  input->fitness_function = identity;
+  input->fitness_function_in = identity;
+  input->fitness_function_out = identity;
   
   return input;
 }
@@ -509,7 +509,9 @@ krapivsky_input_quadratic_heap(krapivsky_input_t *input) {
 
 void
 krapivsky_input_pareto(krapivsky_input_t *input) {
-  input->fitness_function = sample_fitness_pareto;
+  //input->fitness_function = sample_fitness_pareto;
+  input->fitness_function_in = sample_fitness_pareto_in;
+  input->fitness_function_out = sample_fitness_pareto_out;
 }
 
 krapivsky_model_t *
