@@ -65,15 +65,17 @@ rand_init(char *base_dir, char *seed_name) {
 double
 sample_fitness_pareto_in(double lambda, double p) {
   double xm;
-  xm = ((1. + p * lambda) / (2. + p * lambda)) * lambda;
+  xm = (lambda - 1.);
+  //xm = ((1. + p * lambda) / (2. + p * lambda)) * lambda;
   return xm / pow((((double) rand()) / RAND_MAX),1./lambda);
 }
 
 double
 sample_fitness_pareto_out(double mu, double p) {
   double xm;
-  double qm1 = (1. / (1. - p));
-  xm = ((qm1 + mu * p * qm1) / (1 + qm1 + mu * p * qm1)) * mu;
+  //double qm1 = (1. / (1. - p));
+  xm = (mu - 1.);
+  //xm = ((qm1 + mu * p * qm1) / (1 + qm1 + mu * p * qm1)) * mu;
   //xm = ( (1. / (1. - p + p * lambda) / (2. + p * lambda)) * lambda;
   return xm / pow((((double) rand()) / RAND_MAX),1./mu);
 }
