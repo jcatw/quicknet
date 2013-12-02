@@ -192,6 +192,7 @@ krapivsky_input_t *krapivsky_make_input(double p,
 void krapivsky_input_bstreap(krapivsky_input_t *input);
 void krapivsky_input_heap(krapivsky_input_t *input);
 void krapivsky_input_pareto(krapivsky_input_t *input);
+void krapivsky_input_normal(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_bstreap_simulate_lnu(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_bstreap_simulate_lnn(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_bstreap_simulate_lsu(krapivsky_input_t *input);
@@ -202,6 +203,7 @@ krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lnn(krapivsky_input_t *inpu
 krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsu(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_bstreap_simulate_pareto_lsn(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_heap_simulate_pareto(krapivsky_input_t *input);
+krapivsky_model_t *krapivsky_heap_simulate_normal(krapivsky_input_t *input);
 krapivsky_model_t *krapivsky_heap_simulate_quadratic(krapivsky_input_t *input);
 
 // macro-defined

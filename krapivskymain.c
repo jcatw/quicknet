@@ -167,6 +167,8 @@ int main(int argc, char **argv) {
       km = krapivsky_bstreap_simulate_pareto_lsn(input);
     } else if(strcmp(type,"heappareto") == 0) {
       km = krapivsky_heap_simulate_pareto(input);
+    } else if(strcmp(type,"heapnormal") == 0) {
+      km = krapivsky_heap_simulate_normal(input);
     } else if(strcmp(type,"heapquadratic") == 0) {
       km = krapivsky_heap_simulate_quadratic(input);
     } else if(strcmp(type,"heapalpha100") == 0) {

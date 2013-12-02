@@ -514,6 +514,12 @@ krapivsky_input_pareto(krapivsky_input_t *input) {
   input->fitness_function_out = sample_fitness_pareto_out;
 }
 
+void
+krapivsky_input_normal(krapivsky_input_t *input) {
+  input->fitness_function_in = sample_fitness_normal_in;
+  input->fitness_function_out = sample_fitness_normal_out;
+}
+
 krapivsky_model_t *
 krapivsky_bstreap_simulate_lnu(krapivsky_input_t *input) {
   krapivsky_model_t *km;
@@ -606,9 +612,15 @@ krapivsky_bstreap_simulate_pareto_lsn(krapivsky_input_t *input) {
   return krapivsky_bstreap_simulate_lsn(input);
 }
 
-krapivsky_model_t
-*krapivsky_heap_simulate_pareto(krapivsky_input_t *input) {
+krapivsky_model_t *
+krapivsky_heap_simulate_pareto(krapivsky_input_t *input) {
   krapivsky_input_pareto(input);
+  return krapivsky_heap_simulate(input);
+}
+
+krapivsky_model_t *
+krapivsky_heap_simulate_normal(krapivsky_input_t *input) {
+  krapivsky_input_normal(input);
   return krapivsky_heap_simulate(input);
 }
 
