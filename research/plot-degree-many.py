@@ -22,6 +22,11 @@ tail_begins = 1
 # minimum count of degrees considered
 minimum_count = 1  
 
+# log10 of the minimum and maximum values to fit to
+# "waist" of the distribution
+fitmin = 1
+fitmax = 4
+
 
 ### functions
 def plottable_ccdf(x,y):
@@ -34,6 +39,13 @@ def plottable_ccdf(x,y):
     fy = np.log10((1. - (y.cumsum() / y.cumsum()[-1]))[np.logical_and(x >= tail_begins,y >= minimum_count)][:-1])
 
     return fx, fy
+
+def fittable_ccdf(x,y,fitmin,fitmax):
+    """
+    Restrict a log-log ccdf to a certain range.
+    """
+    valid_indices = np.logical_and(x >= fitmin,x<=fitmax)
+    return x[valid_indices], y[valid_indices]
 
 def edgelist_to_edgedict(edgelist):
     """
@@ -183,9 +195,12 @@ for i in xrange(nruns):
         edgelist.append( (int(edgestrings[0]), int(edgestrings[1])) )
 
     total_x_out, total_y_out, total_x_in, total_y_in = edgelist_to_plottable_ccdf(edgelist)
+
+    fit_x_out, fit_y_out = fittable_ccdf(total_x_out, total_y_out, fitmin, fitmax)
+    fit_x_in,  fit_y_in  = fittable_ccdf(total_x_in , total_y_in , fitmin, fitmax)
     
-    l_out = sm.OLS(total_y_out, sm.add_constant(total_x_out, prepend=False)).fit().params
-    l_in = sm.OLS(total_y_in, sm.add_constant(total_x_in, prepend=False)).fit().params
+    l_out = sm.OLS(fit_y_out, sm.add_constant(fit_x_out, prepend=False)).fit().params
+    l_in = sm.OLS(fit_y_in, sm.add_constant(fit_x_in, prepend=False)).fit().params
 
     lambdas[i] = np.abs(l_in[0])+1.
     mus[i] = np.abs(l_out[0])+1.
@@ -216,15 +231,17 @@ for i in xrange(nruns):
                     'Out-Degree Fit',
                     'In-Degree Fit'),loc="best")
         
-        
-        plt.figtext(0.7, 0.5, 'vout: %.2f (%.2f)\nvin: %.2f (%.2f)\np: %.2f\nlambda: %.2f\nmu: %.2f' % (np.abs(l_out[0])+1., v_out, np.abs(l_in[0])+1., v_in, p, lamb, mu),bbox=dict(boxstyle='round', color='wheat', alpha=0.5))
-        
-        plt.savefig(plot_name)
-
 print "lambda"
 print np.mean(lambdas)
-print 2 * stats.sem(lambdas)
+print 2. * stats.sem(lambdas)
 
 print "mu"
 print np.mean(mus)
-print 2 * stats.sem(mus)
+print 2. * stats.sem(mus)
+
+plt.figtext(0.62, 
+            0.5, 
+            'vout: %.2f +/- %.2f (%.2f)\nvin:   %.2f +/- %.2f (%.2f)\np: %.2f\nlambda: %.2f\nmu: %.2f' % (np.mean(mus), 2. * stats.sem(mus), v_out, np.mean(lambdas), 2. * stats.sem(lambdas), v_in, p, lamb, mu),
+            bbox=dict(boxstyle='round', color='wheat', alpha=0.5))
+        
+plt.savefig(plot_name)
