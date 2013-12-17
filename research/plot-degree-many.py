@@ -7,6 +7,7 @@
 #  5: lambda
 #  6: mu
 #  7: nruns
+#  8: title
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,7 +16,7 @@ import os.path
 from itertools import groupby
 from scipy import stats
 
-# where to begin and end line fitting
+# where to begin plotting
 #tail_begins = 1    
 tail_begins = 1    
 #tail_ends = 100000
@@ -24,8 +25,8 @@ minimum_count = 1
 
 # log10 of the minimum and maximum values to fit to
 # "waist" of the distribution
-fitmin = 1
-fitmax = 4
+fitmin = 1.5
+fitmax = 3.5
 
 
 ### functions
@@ -122,6 +123,8 @@ mu = float(sys.argv[6])
 
 nruns = int(sys.argv[7])
 
+title = sys.argv[8]
+
 v_in = 2. + p * lamb
 v_out = 1. + (1. / (1. - p)) + ((mu * p) / (1. - p))
 
@@ -206,13 +209,14 @@ for i in xrange(nruns):
     mus[i] = np.abs(l_out[0])+1.
 
     if i == 0:
-        plt.plot(total_x_out, l_out[0] * total_x_out + l_out[1], '-', color='LightBlue')
-        plt.plot(total_x_in, l_in[0] * total_x_in + l_in[1], '-', color='LightGreen')
+        #plt.plot(total_x_out, l_out[0] * total_x_out + l_out[1], '-', color='LightBlue')
+        #plt.plot(total_x_in, l_in[0] * total_x_in + l_in[1], '-', color='LightGreen')
         
         ### plot everything
         
         plt.figure()
-        plt.title("Degree Distributions of the Krapivsky Model")
+        #plt.title("Degree Distributions of the Krapivsky Model")
+        plt.title("Degree Distribution: %s" % (title,))
         plt.xlabel("Log Degree")
         plt.ylabel("Log CCDF")
         
@@ -239,9 +243,19 @@ print "mu"
 print np.mean(mus)
 print 2. * stats.sem(mus)
 
-plt.figtext(0.62, 
-            0.5, 
-            'vout: %.2f +/- %.2f (%.2f)\nvin:   %.2f +/- %.2f (%.2f)\np: %.2f\nlambda: %.2f\nmu: %.2f' % (np.mean(mus), 2. * stats.sem(mus), v_out, np.mean(lambdas), 2. * stats.sem(lambdas), v_in, p, lamb, mu),
+plabel = '$\\alpha_o$ = %.3f $\\pm$ %.3f (%.2f)\n$\\alpha_i$ = %.3f $\\pm$ %.3f (%.2f)\np = %.1f, $\\lambda$ = %.1f, $\\mu$ = %.1f'
+
+plt.figtext(0.607, 
+            0.55, 
+            plabel % (np.mean(mus), 
+                      2. * stats.sem(mus), 
+                      v_out, 
+                      np.mean(lambdas), 
+                      2. * stats.sem(lambdas), 
+                      v_in, 
+                      p, 
+                      lamb, 
+                      mu),
             bbox=dict(boxstyle='round', color='wheat', alpha=0.5))
         
 plt.savefig(plot_name)

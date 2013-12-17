@@ -36,11 +36,19 @@ run_string = "./quicknet -r %s -e edges.csv -s seed.csv -o %s -p %s -l %s -m %s 
 print run_string
 os.system(run_string)
 
-plot_string = "./plot-degree-many.py dummy %s/edges.csv %s/logccdf.png %s %s %s %s" % (outdir,
-                                                                                       outdir,
-                                                                                       p,
-                                                                                       lamb,
-                                                                                       mu,
-                                                                                       nruns)
+if simtype == "heap":
+    title = "Unaltered Model"
+elif simtype == "heappareto":
+    title = "Pareto Variant"
+elif simtype == "heapnormal":
+    title = "Normal Variant"
+
+plot_string = "./plot-degree-many.py dummy %s/edges.csv %s/logccdf.png %s %s %s %s \"%s\"" % (outdir,
+                                                                                              outdir,
+                                                                                              p,
+                                                                                              lamb,
+                                                                                              mu,
+                                                                                              nruns,
+                                                                                              title)
 print plot_string
 os.system(plot_string)
