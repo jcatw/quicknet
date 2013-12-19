@@ -1,0 +1,29 @@
+#ifndef QUICKNET_NETWORKNODE_H
+#define QUICKNET_NETWORKNODE_H
+
+typedef struct directed_node directed_node_t;
+typedef struct directed_node_list directed_node_list_t;
+
+struct directed_node {
+  uint64_t id;
+  uint64_t in_degree;
+  uint64_t out_degree;
+  double lambda;
+  double mu;
+  directed_node_list_t *adjacency_list;
+};
+
+struct directed_node_list {
+  directed_node_t *node;
+  directed_node_list_t *next;
+};
+
+directed_node_t *make_directed_node(uint64_t id, double lambda, double mu);
+directed_node_t *clone_directed_node(directed_node_t *node);
+directed_node_list_t *make_directed_node_list(directed_node_t *n);
+void add_directed_edge(directed_node_t *n_from, directed_node_t *n_to);
+
+void directed_node_free(directed_node_t *node);
+void directed_node_list_free(directed_node_list_t *node_list);
+
+#endif /* QUICKNET_NETWORKNODE_H */
