@@ -2,6 +2,7 @@
 results/
 research/quicknet
 analysis/
+quicknet/price
 Makefile.bak
 TAGS
 *.csv
