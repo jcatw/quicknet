@@ -1,6 +1,6 @@
 *.o
-quicknet
 results/
+research/quicknet
 analysis/
 Makefile.bak
 TAGS
