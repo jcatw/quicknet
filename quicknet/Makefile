@@ -11,9 +11,9 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = clparse.c heap.c model.c networknode.c price.c
-OBJS = clparse.o heap.o model.o networknode.o price.o
-EXE = price
+SRCS = clparse.c heap.c model.c networknode.c price.c krapivsky.c
+OBJS = clparse.o heap.o model.o networknode.o price.o krapivsky.o
+EXE = price krapivsky
 
 HDRS = clparse.h heap.h model.h networknode.h util.h
 
@@ -34,8 +34,9 @@ tags:
 .c.o:
 	$(CC) -c $(INCLUDES) $(DEFS) $(CFLAGS) $<
 
+#ewwww
 $(EXE): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $(filter-out $(addsuffix .o,$(filter-out $@,$(EXE))),$(OBJS)) $(LIBS)
 # DO NOT DELETE: updated by make depend
 
 clparse.o: clparse.h
@@ -43,3 +44,4 @@ heap.o: networknode.h heap.h
 model.o: networknode.h heap.h model.h
 networknode.o: networknode.h
 price.o: clparse.h util.h networknode.h heap.h model.h
+krapivsky.o: clparse.h util.h networknode.h heap.h model.h

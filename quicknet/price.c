@@ -72,8 +72,9 @@ void simulate_price_model(directed_model_t *price_model) {
     new_node = make_directed_node(price_model->n_nodes,
                                   price_model->fitness_function_in(price_model->lambda),
                                   price_model->mu); //out degree fitness irrelevant
-    price_model->n_nodes++;
     price_model->nodes[i] = new_node;
+    price_model->n_nodes++;
+    
 
     // add an edge from new node to the existing node
     add_directed_edge(new_node, sampled_node);
