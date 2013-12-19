@@ -23,7 +23,7 @@ directed_node_t *clone_directed_node(directed_node_t *node);
 directed_node_list_t *make_directed_node_list(directed_node_t *n);
 void add_directed_edge(directed_node_t *n_from, directed_node_t *n_to);
 
-void directed_node_free(directed_node_t *node);
+void directed_node_free(directed_node_t *node, char free_adjacency_list);
 void directed_node_list_free(directed_node_list_t *node_list);
 
 #endif /* QUICKNET_NETWORKNODE_H */

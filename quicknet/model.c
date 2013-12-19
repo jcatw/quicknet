@@ -16,11 +16,6 @@ directed_model_t *make_directed_model(double p,
                                       double (*compute_preference_mass_out)(directed_node_t *node),
                                       double (*compute_increased_mass_in) (directed_node_t *node),
                                       double (*compute_increased_mass_out)(directed_node_t *node)) {
-                                      //void (*node_adder) (directed_model_t *dm, directed_node_t *new_node),
-                                      //directed_node_t* (*in_degree_sampler) (directed_model_t *dt),
-                                      //directed_node_t* (*out_degree_sampler) (directed_model_t *dt),
-                                      //void (*in_degree_indexer) (directed_model_t *dt, node_t *node),
-                                      //void (*out_degree_indexer) (directed_model_t *dt, node_t *node)) {
   directed_model_t *dm = (directed_model_t *) malloc(sizeof(*dm));
   if (!dm) {
     fprintf(stderr, "Out of memory.\n");
@@ -29,6 +24,7 @@ directed_model_t *make_directed_model(double p,
   dm->in_degree_heap = make_heap();
   dm->out_degree_heap = make_heap();
   dm->n_nodes = 0;
+  dm->target_n_nodes = target_n_nodes;
   dm->p = p;
   dm->lambda = lambda;
   dm->mu = mu;
@@ -38,16 +34,60 @@ directed_model_t *make_directed_model(double p,
   dm->compute_preference_mass_out = compute_preference_mass_out;
   dm->compute_increased_mass_in  = compute_increased_mass_in;
   dm->compute_increased_mass_out = compute_increased_mass_out;
-  //dm->node_adder = node_adder;
-  //dm->in_degree_sampler = in_degree_sampler;
-  //dm->out_degree_sampler = out_degree_sampler;
-  //dm->in_degree_indexer = in_degree_indexer;
-  //dm->out_degree_indexer = out_degree_indexer;
-  dm->nodes = (directed_node_t **) malloc(dm->n_nodes * sizeof(directed_node_t*));
+  dm->nodes = (directed_node_t **) malloc(dm->target_n_nodes * sizeof(directed_node_t*));
   if (!dm->nodes) {
     fprintf(stderr, "Out of memory.\n");
     exit(1);
   }
+  directed_seed(dm);
   return dm;
+}
+
+void directed_seed(directed_model_t *dm) {
+  directed_node_t *node0, *node1, *node2;
+
+  node0 = make_directed_node(0,
+                             dm->fitness_function_in(dm->lambda),
+                             dm->fitness_function_out(dm->mu));
+  node1 = make_directed_node(1,
+                             dm->fitness_function_in(dm->lambda),
+                             dm->fitness_function_out(dm->mu));
+  node2 = make_directed_node(2,
+                             dm->fitness_function_in(dm->lambda),
+                             dm->fitness_function_out(dm->mu));
+
+  dm->nodes[0] = node0;
+  dm->nodes[1] = node1;
+  dm->nodes[2] = node2;
+
+  dm->n_nodes = 3;
+
+  add_directed_edge(node0, node1);
+  add_directed_edge(node0, node2);
+  add_directed_edge(node1, node2);
+
+  heap_insert(dm->in_degree_heap, node0, dm->compute_preference_mass_in);
+  heap_insert(dm->in_degree_heap, node1, dm->compute_preference_mass_in);
+  heap_insert(dm->in_degree_heap, node2, dm->compute_preference_mass_in);
+
+  heap_insert(dm->out_degree_heap, node0, dm->compute_preference_mass_out);
+  heap_insert(dm->out_degree_heap, node1, dm->compute_preference_mass_out);
+  heap_insert(dm->out_degree_heap, node2, dm->compute_preference_mass_out);
+}
+
+void write_directed_network_edges(directed_model_t *dm, char *filename) {
+  uint64_t i;
+  FILE *edge_file;
+  directed_node_list_t *edge;
+
+  edge_file = fopen(filename,"w");
+  for(i=0;i<dm->n_nodes;i++) {
+    edge = dm->nodes[i]->adjacency_list;
+    while(edge != NULL) {
+      fprintf(edge_file,"%llu,%llu\n",dm->nodes[i]->id,edge->node->id);
+      edge = edge->next;
+    }
+  }
+  fclose(edge_file);
 }
 
