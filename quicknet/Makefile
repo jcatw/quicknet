@@ -11,11 +11,11 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = heap.c model.c networknode.c price.c
-OBJS = heap.o model.o networknode.o price.o
+SRCS = clparse.c heap.c model.c networknode.c price.c
+OBJS = clparse.o heap.o model.o networknode.o price.o
 EXE = price
 
-HDRS = heap.h model.h networknode.h util.h
+HDRS = clparse.h heap.h model.h networknode.h util.h
 
 all: ${EXE}
 
@@ -38,7 +38,8 @@ $(EXE): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 # DO NOT DELETE: updated by make depend
 
-heap.o: heap.h
-model.o: heap.h model.h
+clparse.o: clparse.h
+heap.o: networknode.h heap.h
+model.o: networknode.h heap.h model.h
 networknode.o: networknode.h
-price.o: util.h model.h
+price.o: clparse.h util.h networknode.h heap.h model.h
