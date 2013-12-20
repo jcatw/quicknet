@@ -6,13 +6,13 @@
 
 * Components
 ** quicknet/
-   If you want to use quicknet to generate PA networks, use the contents of
-   quicknet/.  There are a few example models already implemented (see
-   price.c and krapivsky.c).  quicknet can be extended to additional
-   models by following the same form.
+   Use quicknet/ to generate networks from PA models.  There are a few
+   example models already implemented (see price.c and krapivsky.c).
+   See [[*Extending%20quicknet][Extending quicknet]] for a description of how to implement your
+   own models.
 
 ** research/
-   This directory contains the code for the paper "Efficient Network
+   This directory contains the implementation for the paper "Efficient Network
    Generation under General Preferential Attachment"[fn:1].  This codebase
    made use of a lot of indirection to enable different central data
    structures; it is quite a bit more difficult to work with than
