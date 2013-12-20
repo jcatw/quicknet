@@ -13,7 +13,7 @@
 
 ** research/
    This directory contains the implementation for the paper "Efficient Network
-   Generation under General Preferential Attachment"[fn:1].  This codebase
+   Generation under General Preferential Attachment"[1].  This codebase
    made use of a lot of indirection to enable different central data
    structures; it is quite a bit more difficult to work with than
    quicknet/.  It is available for reference purposes.
@@ -55,11 +55,11 @@
    
    You should now have the executable modelx in the current directory.
 
-   See the paper[fn:1] for a more detailed description of the data
+   See the paper[1] for a more detailed description of the data
    structures used in quicknet.
 
 * Footnotes
-[fn:1] James Atwood, Bruno Ribeiro, and Don Towsley. "Efficient
+[1] James Atwood, Bruno Ribeiro, and Don Towsley. "Efficient
    Network Generation under General Preferential Attachment".  To be
    submitted to Simplex2014.
 
