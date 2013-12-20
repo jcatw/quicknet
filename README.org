@@ -1,7 +1,7 @@
 * Quicknet: Scalable Network Generator
   quicknet generates scale-free networks via preferential attachment
-  (PA) models.  It is very fast; generating a network with $n$ nodes
-  is $O(n \text{log} n)$, and networks with many millions of nodes can
+  (PA) models.  It is very fast; generating a network with n nodes
+  is O(n log n), and networks with many millions of nodes can
   be generated in a few seconds on commodity hardware.
 
 * Components
