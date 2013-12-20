@@ -8,7 +8,7 @@
 ** quicknet/
    Use quicknet/ to generate networks from PA models.  There are a few
    example models already implemented (see price.c and krapivsky.c).
-   See [[*Extending%20quicknet][Extending quicknet]] for a description of how to implement your
+   See [[#extending-quicknet][Extending quicknet]] for a description of how to implement your
    own models.
 
 ** research/
