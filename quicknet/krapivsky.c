@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "clparse.h"
 #include "util.h"
@@ -24,7 +25,7 @@ int main(int argc, char** argv) {
   clopts_t *options = (clopts_t*) malloc(sizeof(*options));
   directed_model_t *krapivsky_model_linear;
 
-  srand(time(NULL));
+  srand(time(NULL) ^ (getpid()<<16));
 
   // set default options
   options->target_n_nodes = 10000;

@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #include "clparse.h"
 #include "util.h"
@@ -22,6 +24,8 @@ void simulate_price_model(directed_model_t *price_model);
 int main(int argc, char** argv) {
   clopts_t *options = (clopts_t*) malloc(sizeof(*options));
   directed_model_t *price_model_linear;
+
+  srand(time(NULL) ^ (getpid()<<16));
 
   // set default options
   options->target_n_nodes = 10000;
