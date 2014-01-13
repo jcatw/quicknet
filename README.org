@@ -36,14 +36,14 @@
    ./krapivsky
    #+end_src
 *** Command-line options
-    + -n: number of nodes to simulate
-    + -p: probability of taking an edge-step (krapivsky only)
-    + -l: lambda (in-degree fitness) value
-    + -m: mu (out-degree fitness) value
-    + -e: output edge list file name
-
+    + *-n*: number of nodes to simulate
+    + *-p*: probability of taking an edge-step [krapivsky only]
+    + *-l*: lambda (in-degree fitness) value
+    + *-m*: mu (out-degree fitness) value [krapivsky only]
+    + *-e*: output edge list file name
+      
 *** Examples
-    + Generate one network from price's model with 10^6 nodes
+    + Generate one network from price's model with 10^6 nodes.
       #+begin_src sh
       ./price -n 1000000 -l 1.0 -e "price_10_6.csv"
       #+end_src
