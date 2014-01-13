@@ -35,6 +35,23 @@
    #+begin_src sh
    ./krapivsky
    #+end_src
+*** Command-line options
+    + -n: number of nodes to simulate
+    + -p: probability of taking an edge-step (krapivsky only)
+    + -l: lambda (in-degree fitness) value
+    + -m: mu (out-degree fitness) value
+    + -e: output edge list file name
+
+*** Examples
+    + Generate one network from price's model with 10^6 nodes
+      #+begin_src sh
+      ./price -n 1000000 -l 1.0 -e "price_10_6.csv"
+      #+end_src
+    + Generate ten networks from krapivsky's model with 10^5 nodes.
+      #+begin_src sh
+      for ((i=1;i<=10;i++)); do ./krapivsky -n 100000 -l 3.5 -m 1.8 -e "krapivsky_10_5_${i}.csv"; done
+      #+end_src
+      
 ** Extending quicknet
    Let modelx be the model you wish to implement.  In the quicknet/
    directery, create a file modelx.c which follows the same format as
@@ -59,9 +76,9 @@
    structures used in quicknet.
 
 * Footnotes
-[1] James Atwood, Bruno Ribeiro, and Don Towsley. "Efficient
-   Network Generation under General Preferential Attachment".  To be
-   submitted to Simplex2014.
+[1] James Atwood, Bruno Ribeiro, and Don Towsley. "Efficient Network
+   Generation under General Preferential Attachment".  Submitted to
+   Simplex2014.
 
    
   
