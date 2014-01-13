@@ -1,6 +1,7 @@
 #CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
-CFLAGS = -g -ggdb -lm
+#CFLAGS = -g -ggdb -lm
+CFLAGS = -O3 -lm
 LDFLAGS = -lm
 DEFS = 
 
