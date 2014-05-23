@@ -40,7 +40,9 @@
    #+end_src
 *** Command-line options
     + *-n*: number of nodes to simulate
-    + *-p*: probability of taking an edge-step [krapivsky only]
+    + *-p*: overloaded
+      + krapivsky: probability of taking an edge-step
+      + pricerecip: probability of reciprocating an edge
     + *-l*: lambda (in-degree fitness) value
     + *-m*: mu (out-degree fitness) value [krapivsky only]
     + *-e*: output edge list file name
