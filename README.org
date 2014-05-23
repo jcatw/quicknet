@@ -7,9 +7,9 @@
 * Components
 ** quicknet/
    Use quicknet/ to generate networks from PA models.  There are a few
-   example models already implemented (see price.c and krapivsky.c).
-   See [[#extending-quicknet][Extending quicknet]] for a description of how to implement your
-   own models.
+   example models already implemented (see price.c, pricerecip.c,
+   krapivsky.c).  See [[#extending-quicknet][Extending quicknet]] for a description of how to
+   implement your own models.
 
 ** research/
    This directory contains the implementation for the paper "Efficient Network
@@ -19,14 +19,17 @@
    quicknet/.  It is available for reference purposes.
 
 * quicknet/
+** Implemented Models
+   + Price's model, with and without reciprocation
+   + Krapivsky's model
 ** Compiling quicknet
    #+begin_src sh
    cd quicknet
    make
-   chmod 755 price krapivsky
+   chmod 755 price pricerecip krapivsky
    #+end_src
    
-   This produces the 'price' and 'krapivsky' executables.
+   This produces the 'price', 'pricerecip', and 'krapivsky' executables.
 ** Running quicknet
    #+begin_src sh
    ./price

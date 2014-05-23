@@ -12,9 +12,9 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = clparse.c heap.c model.c networknode.c price.c krapivsky.c
-OBJS = clparse.o heap.o model.o networknode.o price.o krapivsky.o
-EXE = price krapivsky
+SRCS = clparse.c heap.c model.c networknode.c price.c pricerecip.c krapivsky.c 
+OBJS = clparse.o heap.o model.o networknode.o price.o pricerecip.o krapivsky.o
+EXE = price pricerecip krapivsky
 
 HDRS = clparse.h heap.h model.h networknode.h util.h
 
@@ -45,4 +45,5 @@ heap.o: networknode.h heap.h
 model.o: networknode.h heap.h model.h
 networknode.o: networknode.h
 price.o: clparse.h util.h networknode.h heap.h model.h
+pricerecip.o: clparse.h util.h networknode.h heap.h model.h
 krapivsky.o: clparse.h util.h networknode.h heap.h model.h

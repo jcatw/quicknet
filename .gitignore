@@ -4,6 +4,7 @@ research/quicknet
 analysis/
 quicknet/price
 quicknet/krapivsky
+quicknet/pricerecip
 Makefile.bak
 TAGS
 *.csv
