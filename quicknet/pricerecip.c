@@ -19,7 +19,7 @@ def_identity_fn(double);
 //   compute_linear_increased_mass_{in,out}
 def_alpha_preference_fns(1.0, linear); 
 
-void simulate_reciprocated_price_model(directed_model_t *price_model);
+void simulate_reciprocated_price_model(directed_model_t *price_model, double r);
 
 int main(int argc, char** argv) {
   clopts_t *options = (clopts_t*) malloc(sizeof(*options));
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
   options->target_n_nodes = 10000;
   options->lambda = 1.0;
   options->mu = 0.0;
-  options->p = 0.1;  //probability of reciprocation
+  options->r = 0.2;  //probability of reciprocation
   strcpy(options->edge_file_name,"price_edges.csv");
 
   // parse command line options
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
   // simulate network
   printf("Simulating network.\n");
-  simulate_reciprocated_price_model(price_model_linear);
+  simulate_reciprocated_price_model(price_model_linear, options->r);
 
   // write edges
   printf("Writing edges to %s.\n",options->edge_file_name);
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-void simulate_reciprocated_price_model(directed_model_t *price_model) {
+void simulate_reciprocated_price_model(directed_model_t *price_model, double r) {
   double u;
   uint64_t i;
   directed_node_t *new_node, *sampled_node;
@@ -83,9 +83,9 @@ void simulate_reciprocated_price_model(directed_model_t *price_model) {
     
     // add an edge from new node to the existing node
     add_directed_edge(new_node, sampled_node);
-    // add a reciprocal edge with probability p
+    // add a reciprocal edge with probability r
     u = rand() / (double) RAND_MAX;
-    if (u < price_model->p) {
+    if (u < r) {
       add_directed_edge(sampled_node, new_node);
     }
 

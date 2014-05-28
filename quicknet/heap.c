@@ -2,8 +2,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define HASH_BUCKETS 10000
+
 #include "networknode.h"
 #include "heap.h"
+#include "hash.h"
 
 heap_t *make_heap() {
   heap_t *h = (heap_t*) malloc(sizeof(*h));
@@ -13,6 +16,7 @@ heap_t *make_heap() {
   }
   h->total_mass = 0;
   h->n_nodes = 0;
+  h->hash = make_hash(HASH_BUCKETS);
   h->n_alloced = 64;
   h->items = (heap_item_t**) malloc(h->n_alloced * sizeof(heap_item_t*));
   return h;
@@ -64,6 +68,8 @@ heap_insert(heap_t *heap,
   
   item = make_heap_item(node, compute_mass);
   item->index = heap->n_nodes;
+
+  hash_insert(heap->hash, node, item);
   
   // ensure that the heap can accommodate a new item
   if (heap->n_nodes == heap->n_alloced) {
@@ -92,7 +98,7 @@ void heap_increase_mass(heap_t *heap,
   // assumes that priority and node mass are one and the same
   double introduced_mass;
   if (new_mass < item->node_mass) {
-    fprintf(stderr,"New priority is smaller than current priority.\n");
+    fprintf(stderr,"New priority %.6f is smaller than current priority %.6f.\n",new_mass,item->node_mass);
     return;
   }
 
@@ -150,6 +156,9 @@ void heap_exchange(heap_t *heap, heap_item_t *child, heap_item_t *parent) {
   child->node_mass = parent_node_mass;
   //child->subtree_mass = parent_subtree_mass - child_node_mass + parent_node_mass;
   child->subtree_mass = parent_subtree_mass - child_node_mass - other_child_subtree_mass;
+
+  hash_get(heap->hash, parent->node)->item = parent;
+  hash_get(heap->hash, child->node)->item = child;
 }
 
 directed_node_t *heap_sample_increment(heap_t *heap,

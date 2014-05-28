@@ -1,8 +1,7 @@
 #ifndef QUICKNET_NETWORKNODE_H
 #define QUICKNET_NETWORKNODE_H
 
-typedef struct directed_node directed_node_t;
-typedef struct directed_node_list directed_node_list_t;
+#include "types.h"
 
 struct directed_node {
   uint64_t id;

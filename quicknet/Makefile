@@ -1,7 +1,7 @@
 #CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
-#CFLAGS = -g -ggdb -lm
-CFLAGS = -O3 -lm
+CFLAGS = -g -ggdb -lm
+#CFLAGS = -O3 -lm
 LDFLAGS = -lm
 DEFS = 
 
@@ -12,11 +12,11 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = clparse.c heap.c model.c networknode.c price.c pricerecip.c krapivsky.c 
-OBJS = clparse.o heap.o model.o networknode.o price.o pricerecip.o krapivsky.o
-EXE = price pricerecip krapivsky
+SRCS = clparse.c hash.c heap.c model.c networknode.c price.c pricerecip.c krapivsky.c krapivskyrecip.c 
+OBJS = clparse.o hash.o heap.o model.o networknode.o price.o pricerecip.o krapivsky.o krapivskyrecip.o
+EXE = price pricerecip krapivsky krapivskyrecip
 
-HDRS = clparse.h heap.h model.h networknode.h util.h
+HDRS = clparse.h hash.h heap.h model.h networknode.h types.h util.h
 
 all: ${EXE}
 
@@ -40,10 +40,13 @@ $(EXE): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(filter-out $(addsuffix .o,$(filter-out $@,$(EXE))),$(OBJS)) $(LIBS)
 # DO NOT DELETE: updated by make depend
 
-clparse.o: clparse.h
-heap.o: networknode.h heap.h
-model.o: networknode.h heap.h model.h
-networknode.o: networknode.h
-price.o: clparse.h util.h networknode.h heap.h model.h
-pricerecip.o: clparse.h util.h networknode.h heap.h model.h
-krapivsky.o: clparse.h util.h networknode.h heap.h model.h
+clparse.o: clparse.h types.h
+hash.o: hash.h types.h
+heap.o: networknode.h types.h heap.h hash.h
+model.o: networknode.h types.h heap.h model.h
+networknode.o: networknode.h types.h
+price.o: clparse.h types.h util.h networknode.h heap.h model.h
+pricerecip.o: clparse.h types.h util.h networknode.h heap.h model.h
+krapivsky.o: clparse.h types.h util.h networknode.h heap.h model.h
+krapivskyrecip.o: clparse.h types.h util.h networknode.h heap.h model.h
+krapivskyrecip.o: hash.h

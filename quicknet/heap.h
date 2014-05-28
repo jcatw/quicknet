@@ -1,12 +1,12 @@
 #ifndef QUICKNET_HEAP_H
 #define QUICKNET_HEAP_H
 
-typedef struct heap heap_t;
-typedef struct heap_item heap_item_t;
+#include "types.h"
 
 struct heap {
   double total_mass;
   uint64_t n_nodes;
+  hash_t *hash;
   heap_item_t **items;
   uint64_t n_alloced;
 };

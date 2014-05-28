@@ -1,7 +1,7 @@
 #ifndef QUICKNET_MODEL_H
 #define QUICKNET_MODEL_H
 
-typedef struct directed_model directed_model_t;
+#include "types.h"
 
 struct directed_model {
   heap_t *in_degree_heap;

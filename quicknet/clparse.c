@@ -25,6 +25,9 @@ void clparse(clopts_t *options, int argc, char **argv) {
     case 'm':
       sscanf(optarg, "%lf", &(options->mu));
       break;
+    case 'r':
+      sscanf(optarg, "%lf", &(options->r));
+      break;
     case 'e':
       strcpy(options->edge_file_name, optarg);
       break;
