@@ -68,9 +68,9 @@ heap_insert(heap_t *heap,
   
   item = make_heap_item(node, compute_mass);
   item->index = heap->n_nodes;
-
+  //printf("about to insert\n");
   hash_insert(heap->hash, node, item);
-  
+  //printf("inserted");
   // ensure that the heap can accommodate a new item
   if (heap->n_nodes == heap->n_alloced) {
     heap->items = realloc(heap->items, 2*heap->n_alloced * sizeof(heap_item_t*));

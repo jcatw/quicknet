@@ -72,10 +72,13 @@ void simulate_reciprocated_krapivsky_model(directed_model_t *krapivsky_model, do
   directed_node_t *new_node, *in_degree_sampled_node, *out_degree_sampled_node;
 
   // while the network still needs to grow...
+  //printf("starting\n");
   while(krapivsky_model->n_nodes < krapivsky_model->target_n_nodes) {
+    
     u = rand() / (double) RAND_MAX;
     // with probability p, take a node step
     if (u < krapivsky_model->p) {
+      //printf("node step");
       // sample an existing node by in-degree and increase its preference mass
       in_degree_sampled_node = heap_sample_increment(krapivsky_model->in_degree_heap,
                                                      krapivsky_model->compute_increased_mass_in);
@@ -112,6 +115,7 @@ void simulate_reciprocated_krapivsky_model(directed_model_t *krapivsky_model, do
     }
     // with probability 1-p, take an edge step
     else {
+      //printf("edge step");
       // sample two existing nodes: one by in-degree and one by out-degree
       // increase their preference masses
       in_degree_sampled_node = heap_sample_increment(krapivsky_model->in_degree_heap,
