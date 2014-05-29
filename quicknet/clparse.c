@@ -11,7 +11,7 @@ void clparse(clopts_t *options, int argc, char **argv) {
   char c;
 
   //options = (clopts_t*) malloc(sizeof(*options));
-  while((c = getopt(argc, argv, "n:p:l:m:e:")) != -1) {
+  while((c = getopt(argc, argv, "n:p:l:m:e:r:")) != -1) {
     switch(c) {
     case 'n':
       sscanf(optarg, "%llu", &(options->target_n_nodes));
