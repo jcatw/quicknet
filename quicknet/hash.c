@@ -20,7 +20,7 @@ hash_item_t *make_hash_item(directed_node_t *node, heap_item_t *item) {
 }
 
 int hash_addr(hash_t *table, directed_node_t *node) {
-  return ((int) node) % table->n_buckets;
+  return ((unsigned int) node) % table->n_buckets;
 }
 
 void hash_insert(hash_t *table, directed_node_t *node, heap_item_t *item) {
@@ -28,12 +28,15 @@ void hash_insert(hash_t *table, directed_node_t *node, heap_item_t *item) {
   hash_item_t *hashitem;
   hash_item_t *head;
 
+  //printf("making item\n");
   hashitem = make_hash_item(node,item);
 
   // find the bucket
   addr = hash_addr(table, node);
-
+  //printf("getting addr %d\n",addr);
+  
   // insert at head
+  //printf("inserting at head\n");
   head = table->buckets[addr];
   table->buckets[addr] = hashitem;
   hashitem->next = head;
