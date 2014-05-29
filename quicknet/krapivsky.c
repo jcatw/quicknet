@@ -92,6 +92,9 @@ void simulate_krapivsky_model(directed_model_t *krapivsky_model) {
       heap_insert(krapivsky_model->in_degree_heap,
                   new_node,
                   krapivsky_model->compute_preference_mass_in);
+      heap_insert(krapivsky_model->out_degree_heap,
+                  new_node,
+                  krapivsky_model->compute_preference_mass_out);
     }
     // with probability 1-p, take an edge step
     else {
