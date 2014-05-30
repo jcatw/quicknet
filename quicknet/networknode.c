@@ -17,6 +17,7 @@ directed_node_t *make_directed_node(uint64_t id, double lambda, double mu) {
   n->mu = mu;
   n->tarjindex = -1;
   n->tarjlowlink = -1;
+  n->on_stack = 0;
   n->adjacency_list = NULL;
   return n;
 }

@@ -10,6 +10,7 @@
 #include "networknode.h"
 #include "heap.h"
 #include "model.h"
+#include "hash.h"
 #include "scc.h"
 
 // define identity_double
@@ -20,11 +21,12 @@ def_identity_fn(double);
 //   compute_linear_increased_mass_{in,out}
 def_alpha_preference_fns(1.0, linear); 
 
-void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model);
+void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model, double r);
 
 int main(int argc, char** argv) {
   clopts_t *options = (clopts_t*) malloc(sizeof(*options));
   directed_model_t *krapivsky_model_linear;
+  int nscc = 0;
 
   srand(time(NULL) ^ (getpid()<<16));
 
@@ -33,6 +35,7 @@ int main(int argc, char** argv) {
   options->lambda = 3.5;
   options->mu = 1.8;
   options->p = 0.2;
+  options->r = 0.5;
   strcpy(options->edge_file_name,"krapivsky_edges.csv");
 
   // parse command line options
@@ -53,8 +56,14 @@ int main(int argc, char** argv) {
 
   // simulate network
   printf("Simulating network.\n");
-  simulate_sc_krapivsky_model(krapivsky_model_linear);
-  printf("Strongly connected? %d\n",is_strongly_connected(krapivsky_model_linear));
+
+  do {
+    simulate_sc_krapivsky_model(krapivsky_model_linear, options->r);
+    nscc = is_strongly_connected(krapivsky_model_linear);
+    printf("N strongly connected components: %d\n",nscc);
+    if (nscc != 1)
+      reset_model(krapivsky_model_linear);
+  } while (nscc != 1);
 
   // write edges
   printf("Writing edges to %s.\n",options->edge_file_name);
@@ -67,7 +76,7 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model) {
+void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model, double r) {
   double u;
   directed_node_t *new_node, *in_degree_sampled_node, *out_degree_sampled_node;
 
@@ -97,6 +106,18 @@ void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model) {
       heap_insert(krapivsky_model->out_degree_heap,
                   new_node,
                   krapivsky_model->compute_preference_mass_out);
+      // with probability r, reciprocate the edge
+      u = rand() / (double) RAND_MAX;
+      if(u < r) {
+        add_directed_edge(in_degree_sampled_node, new_node);
+        //update indices
+        heap_increase_mass(krapivsky_model->out_degree_heap,
+                           hash_get(krapivsky_model->out_degree_heap->hash,in_degree_sampled_node)->item,
+                           compute_linear_preference_mass_out(in_degree_sampled_node));
+        heap_increase_mass(krapivsky_model->in_degree_heap,
+                           hash_get(krapivsky_model->in_degree_heap->hash,new_node)->item,
+                           compute_linear_preference_mass_in(new_node));
+      }
     }
     // with probability 1-p, take an edge step
     else {
@@ -109,6 +130,20 @@ void simulate_sc_krapivsky_model(directed_model_t *krapivsky_model) {
 
       // add an edge between the sampled nodes
       add_directed_edge(out_degree_sampled_node, in_degree_sampled_node);
+
+      // with probability r, reciprocate the edge
+      u = rand() / (double) RAND_MAX;
+      if(u < r) {
+        add_directed_edge(in_degree_sampled_node, out_degree_sampled_node);
+        //update indices
+        heap_increase_mass(krapivsky_model->out_degree_heap,
+                           hash_get(krapivsky_model->out_degree_heap->hash,in_degree_sampled_node)->item,
+                           compute_linear_preference_mass_out(in_degree_sampled_node));
+        heap_increase_mass(krapivsky_model->in_degree_heap,
+                           hash_get(krapivsky_model->in_degree_heap->hash,out_degree_sampled_node)->item,
+                           compute_linear_preference_mass_in(out_degree_sampled_node));
+      }
+
     }
   }
 }

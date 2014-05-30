@@ -43,6 +43,22 @@ directed_model_t *make_directed_model(double p,
   return dm;
 }
 
+void reset_model(directed_model_t *dm) {
+  uint64_t i = 0;
+  
+  heap_free(dm->in_degree_heap);
+  heap_free(dm->out_degree_heap);
+  dm->in_degree_heap = make_heap();
+  dm->out_degree_heap = make_heap();
+  
+  for(i = 0; i < dm->n_nodes; i++) {
+    directed_node_free(dm->nodes[i], 1);
+  }
+
+  dm->n_nodes = 0;
+  directed_seed(dm);
+}
+
 void directed_seed(directed_model_t *dm) {
   directed_node_t *node0, *node1, *node2;
 

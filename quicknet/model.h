@@ -35,6 +35,7 @@ directed_model_t *make_directed_model(double p,
                                       double (*compute_preference_mass_out)(directed_node_t *node),
                                       double (*compute_increased_mass_in) (directed_node_t *node),
                                       double (*compute_increased_mass_out)(directed_node_t *node));
+void reset_model(directed_model_t *dm);
 void directed_seed(directed_model_t *dm);
 void write_directed_network_edges(directed_model_t *dm, char *filename);
 #endif /* QUICKNET_MODEL_H */

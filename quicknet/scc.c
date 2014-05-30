@@ -71,6 +71,7 @@ directed_node_t *pop_nodestack(nodestack_t *nstack) {
   top = nstack;
   nstack = nstack->next;
   free(top);
+  node->on_stack = 0;
   return node;
 }
 
@@ -79,6 +80,7 @@ nodestack_t *push_nodestack(nodestack_t *nstack, directed_node_t *node) {
   new = make_nodestack(node);
   new->next = nstack;
   nstack = new;
+  node->on_stack = 1;
   return nstack;
 }
 
@@ -93,10 +95,11 @@ void free_nodestack(nodestack_t *nstack) {
 }
 
 char nodestack_contains(nodestack_t *nstack, directed_node_t *query_node) {
-  while(nstack) {
-    if (nstack->node == query_node)
-      return 1;
-    nstack = nstack->next;
-  }
-  return 0;
+  return query_node->on_stack;
+  //while(nstack) {
+  //  if (nstack->node == query_node)
+  //    return 1;
+  //  nstack = nstack->next;
+  //}
+  //return 0;
 }

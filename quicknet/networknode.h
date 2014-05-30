@@ -11,6 +11,7 @@ struct directed_node {
   double mu;
   int64_t tarjindex;   //used for scc search
   int64_t tarjlowlink; //this too
+  char on_stack;        //also this
   directed_node_list_t *adjacency_list;
 };
 
