@@ -20,16 +20,18 @@
 
 * quicknet/
 ** Implemented Models
-   + Price's model, with and without reciprocation
+   + Price's model
+	 + Price's model with reciprocation
    + Krapivsky's model
+	 + Krapivsky's model with reciprocation
+	 + Krapivsky's model with strongly connected component analysis
 ** Compiling quicknet
    #+begin_src sh
    cd quicknet
    make
-   chmod 755 price pricerecip krapivsky
    #+end_src
    
-   This produces the 'price', 'pricerecip', and 'krapivsky' executables.
+   This will produce several executables.
 ** Running quicknet
    #+begin_src sh
    ./price
@@ -38,11 +40,11 @@
    #+begin_src sh
    ./krapivsky
    #+end_src
+	 or, run one of the other binaries.
 *** Command-line options
     + *-n*: number of nodes to simulate
-    + *-p*: overloaded
-      + krapivsky: probability of taking an edge-step
-      + pricerecip: probability of reciprocating an edge
+    + *-p*: probability of taking a node step (krapivsky only)
+		+ *-r*: probability of reciprocating an edge
     + *-l*: lambda (in-degree fitness) value
     + *-m*: mu (out-degree fitness) value [krapivsky only]
     + *-e*: output edge list file name
