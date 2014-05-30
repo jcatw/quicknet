@@ -6,6 +6,7 @@ quicknet/price
 quicknet/krapivsky
 quicknet/pricerecip
 quicknet/krapivskyrecip
+quicknet/krapivskysc
 Makefile.bak
 TAGS
 *.csv

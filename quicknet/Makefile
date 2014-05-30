@@ -1,7 +1,7 @@
 #CC = gcc -Wall -Wstrict-prototypes -Wnested-externs -Wno-format
 CC = gcc -Wall
-CFLAGS = -g -ggdb -lm
-#CFLAGS = -O3 -lm
+#CFLAGS = -g -ggdb -lm
+CFLAGS = -O3 -lm
 LDFLAGS = -lm
 DEFS = 
 
@@ -12,11 +12,11 @@ DEPEND_DEFINES =
 srcdir = 
 INCLUDES = -I$(srcdir)
 
-SRCS = clparse.c hash.c heap.c model.c networknode.c price.c pricerecip.c krapivsky.c krapivskyrecip.c 
-OBJS = clparse.o hash.o heap.o model.o networknode.o price.o pricerecip.o krapivsky.o krapivskyrecip.o
-EXE = price pricerecip krapivsky krapivskyrecip
+SRCS = clparse.c hash.c heap.c model.c networknode.c price.c pricerecip.c krapivsky.c krapivskyrecip.c krapivskysc.c scc.c
+OBJS = clparse.o hash.o heap.o model.o networknode.o price.o pricerecip.o krapivsky.o krapivskyrecip.o krapivskysc.o scc.o
+EXE = price pricerecip krapivsky krapivskyrecip krapivskysc
 
-HDRS = clparse.h hash.h heap.h model.h networknode.h types.h util.h
+HDRS = clparse.h hash.h heap.h model.h networknode.h scc.h types.h util.h
 
 all: ${EXE}
 
@@ -50,3 +50,5 @@ pricerecip.o: clparse.h types.h util.h networknode.h heap.h model.h
 krapivsky.o: clparse.h types.h util.h networknode.h heap.h model.h
 krapivskyrecip.o: clparse.h types.h util.h networknode.h heap.h model.h
 krapivskyrecip.o: hash.h
+krapivskysc.o: clparse.h types.h util.h networknode.h heap.h model.h scc.h
+scc.o: networknode.h types.h model.h scc.h

@@ -9,6 +9,8 @@ struct directed_node {
   uint64_t out_degree;
   double lambda;
   double mu;
+  int64_t tarjindex;   //used for scc search
+  int64_t tarjlowlink; //this too
   directed_node_list_t *adjacency_list;
 };
 

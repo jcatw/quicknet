@@ -14,4 +14,6 @@ typedef struct clopts clopts_t;
 typedef struct hash hash_t;
 typedef struct hash_item hash_item_t;
 
+typedef struct nodestack nodestack_t;
+
 #endif /* QUICKNET_TYPES_H */
